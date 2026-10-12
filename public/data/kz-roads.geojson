@@ -1,0 +1,1093 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": "road-1",
+      "properties": {
+        "ref": "A1",
+        "name": "Astana – Kokshetau – Petropavlovsk Expressway",
+        "class": "expressway",
+        "highway": "motorway",
+        "lanes": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            71.45,
+            51.17
+          ],
+          [
+            71.12,
+            51.52
+          ],
+          [
+            70.95,
+            51.98
+          ],
+          [
+            70.52,
+            52.45
+          ],
+          [
+            70.21,
+            52.88
+          ],
+          [
+            69.38,
+            53.28
+          ],
+          [
+            69.25,
+            53.72
+          ],
+          [
+            69.18,
+            54.32
+          ],
+          [
+            69.15,
+            54.87
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-2",
+      "properties": {
+        "ref": "A2",
+        "name": "Western Europe – Western China Southern Expressway (Khorgos – Almaty)",
+        "class": "expressway",
+        "highway": "motorway",
+        "lanes": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            80.4,
+            44.22
+          ],
+          [
+            79.99,
+            44.16
+          ],
+          [
+            79.6,
+            44.02
+          ],
+          [
+            79.3,
+            43.7
+          ],
+          [
+            78.75,
+            43.55
+          ],
+          [
+            78.2,
+            43.48
+          ],
+          [
+            77.55,
+            43.42
+          ],
+          [
+            77.07,
+            43.88
+          ],
+          [
+            76.89,
+            43.24
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-3",
+      "properties": {
+        "ref": "A2",
+        "name": "Western Europe – Western China Highway (Almaty – Taraz – Shymkent)",
+        "class": "expressway",
+        "highway": "motorway",
+        "lanes": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            76.89,
+            43.24
+          ],
+          [
+            76.62,
+            43.2
+          ],
+          [
+            75.85,
+            43.35
+          ],
+          [
+            75.2,
+            43.53
+          ],
+          [
+            75.07,
+            43.32
+          ],
+          [
+            74.55,
+            43.15
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-4",
+      "properties": {
+        "ref": "A2",
+        "name": "Western Europe – Western China Highway (Almaty – Taraz – Shymkent)",
+        "class": "expressway",
+        "highway": "motorway",
+        "lanes": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            72.8,
+            42.92
+          ],
+          [
+            71.37,
+            42.9
+          ],
+          [
+            70.55,
+            42.5
+          ],
+          [
+            69.59,
+            42.32
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-5",
+      "properties": {
+        "ref": "A3",
+        "name": "Almaty – Qonayev – Taldykorgan Expressway",
+        "class": "expressway",
+        "highway": "motorway",
+        "lanes": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            76.89,
+            43.24
+          ],
+          [
+            77.07,
+            43.88
+          ],
+          [
+            77.4,
+            44.25
+          ],
+          [
+            77.82,
+            44.62
+          ],
+          [
+            78.37,
+            45.02
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-6",
+      "properties": {
+        "ref": "A17",
+        "name": "Astana – Pavlodar Expressway",
+        "class": "expressway",
+        "highway": "motorway",
+        "lanes": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            71.45,
+            51.17
+          ],
+          [
+            72.1,
+            51.38
+          ],
+          [
+            73.1,
+            51.62
+          ],
+          [
+            74.2,
+            51.68
+          ],
+          [
+            75.32,
+            51.72
+          ],
+          [
+            76.2,
+            51.95
+          ],
+          [
+            76.92,
+            52.04
+          ],
+          [
+            76.97,
+            52.29
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-7",
+      "properties": {
+        "ref": "M36",
+        "name": "Astana – Temirtau – Karaganda Expressway",
+        "class": "expressway",
+        "highway": "motorway",
+        "lanes": 4
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            71.45,
+            51.17
+          ],
+          [
+            71.85,
+            50.82
+          ],
+          [
+            72.35,
+            50.45
+          ],
+          [
+            72.95,
+            50.05
+          ],
+          [
+            73.1,
+            49.8
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-8",
+      "properties": {
+        "ref": "M32",
+        "name": "Trans-Aral Highway (Shymkent – Kyzylorda – Aralsk)",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            69.59,
+            42.32
+          ],
+          [
+            68.85,
+            42.85
+          ],
+          [
+            68.25,
+            43.3
+          ],
+          [
+            67.45,
+            43.82
+          ],
+          [
+            66.45,
+            44.3
+          ],
+          [
+            65.51,
+            44.85
+          ],
+          [
+            64.8,
+            45.18
+          ],
+          [
+            64.08,
+            45.49
+          ],
+          [
+            63.31,
+            45.62
+          ],
+          [
+            62.11,
+            45.76
+          ],
+          [
+            61.67,
+            46.8
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-9",
+      "properties": {
+        "ref": "M32",
+        "name": "Trans-Aral Northern Highway (Aralsk – Aktobe – Oral)",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            61.67,
+            46.8
+          ],
+          [
+            61.42,
+            47.75
+          ],
+          [
+            61.27,
+            48.61
+          ],
+          [
+            60.65,
+            49.3
+          ],
+          [
+            60.1,
+            49.92
+          ],
+          [
+            58.44,
+            50.25
+          ],
+          [
+            57.21,
+            50.28
+          ],
+          [
+            56.1,
+            50.22
+          ],
+          [
+            55,
+            50.12
+          ],
+          [
+            53.2,
+            50.6
+          ],
+          [
+            51.37,
+            51.23
+          ],
+          [
+            50.4,
+            51.1
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-10",
+      "properties": {
+        "ref": "M36",
+        "name": "Central Kazakhstan Artery (Karaganda – Lake Balkhash – Shu)",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.1,
+            49.8
+          ],
+          [
+            73.45,
+            49.05
+          ],
+          [
+            73.84,
+            47.98
+          ],
+          [
+            74.35,
+            47.45
+          ],
+          [
+            74.98,
+            46.85
+          ],
+          [
+            74.3,
+            46.5
+          ],
+          [
+            73.61,
+            46.22
+          ],
+          [
+            73.55,
+            45.4
+          ],
+          [
+            73.65,
+            44.5
+          ],
+          [
+            73.75,
+            43.6
+          ],
+          [
+            74.45,
+            43.55
+          ],
+          [
+            75.2,
+            43.53
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-11",
+      "properties": {
+        "ref": "M38",
+        "name": "Irtysh River Valley Corridor (Pavlodar – Semey – Oskemen)",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.31,
+            53.54
+          ],
+          [
+            76.1,
+            52.88
+          ],
+          [
+            76.97,
+            52.29
+          ],
+          [
+            78.54,
+            50.75
+          ],
+          [
+            80.26,
+            50.43
+          ],
+          [
+            81.56,
+            49.37
+          ],
+          [
+            82.61,
+            49.95
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-12",
+      "properties": {
+        "ref": "M38",
+        "name": "Eastern Altai Highway (Oskemen – Zaysan – China Border)",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            82.61,
+            49.95
+          ],
+          [
+            83.35,
+            49.65
+          ],
+          [
+            83.52,
+            49.63
+          ],
+          [
+            84.1,
+            48.75
+          ],
+          [
+            84.87,
+            47.47
+          ],
+          [
+            85.6,
+            47.5
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-13",
+      "properties": {
+        "ref": "A3",
+        "name": "Jetisu – Alakol – Ayagoz Highway",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            78.37,
+            45.02
+          ],
+          [
+            79.23,
+            45.32
+          ],
+          [
+            79.91,
+            45.41
+          ],
+          [
+            80.94,
+            46.17
+          ],
+          [
+            80.7,
+            47.1
+          ],
+          [
+            80.43,
+            47.97
+          ],
+          [
+            81.56,
+            49.37
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-14",
+      "properties": {
+        "ref": "A27",
+        "name": "Ural River & Caspian Highway (Oral – Atyrau – Beineu)",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            51.37,
+            51.23
+          ],
+          [
+            51.17,
+            50.2
+          ],
+          [
+            51.78,
+            48.55
+          ],
+          [
+            51.58,
+            47.66
+          ],
+          [
+            51.92,
+            47.11
+          ],
+          [
+            52.98,
+            47.52
+          ],
+          [
+            54.02,
+            46.98
+          ],
+          [
+            55.19,
+            45.32
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-15",
+      "properties": {
+        "ref": "A33",
+        "name": "Mangystau Caspian Port Highway (Beineu – Aktau)",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            55.19,
+            45.32
+          ],
+          [
+            54.05,
+            44.85
+          ],
+          [
+            53.1,
+            44.45
+          ],
+          [
+            52.12,
+            44.17
+          ],
+          [
+            51.85,
+            43.85
+          ],
+          [
+            51.17,
+            43.65
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-16",
+      "properties": {
+        "ref": "A34",
+        "name": "Zhanaozen – Turkmenistan Border Highway",
+        "class": "trunk",
+        "highway": "trunk",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            51.85,
+            43.85
+          ],
+          [
+            52.85,
+            43.34
+          ],
+          [
+            53.2,
+            42.85
+          ],
+          [
+            53.5,
+            42.45
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-17",
+      "properties": {
+        "ref": "A22",
+        "name": "Central Steppe Highway (Karaganda – Zhezkazgan)",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.1,
+            49.8
+          ],
+          [
+            72.35,
+            49.25
+          ],
+          [
+            71.65,
+            48.68
+          ],
+          [
+            69.8,
+            48.2
+          ],
+          [
+            67.71,
+            47.8
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-18",
+      "properties": {
+        "ref": "A23",
+        "name": "Zhezkazgan – Arkalyk – Kostanay Highway",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            67.71,
+            47.8
+          ],
+          [
+            67.53,
+            47.9
+          ],
+          [
+            66.95,
+            48.65
+          ],
+          [
+            66.92,
+            50.25
+          ],
+          [
+            65.85,
+            51.6
+          ],
+          [
+            64.5,
+            52.5
+          ],
+          [
+            63.63,
+            53.21
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-19",
+      "properties": {
+        "ref": "P1",
+        "name": "Astana – Korgalzhyn Ramsar Wetland Highway",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            71.45,
+            51.17
+          ],
+          [
+            70.85,
+            50.85
+          ],
+          [
+            70.2,
+            50.58
+          ],
+          [
+            69.25,
+            50.41
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-20",
+      "properties": {
+        "ref": "A24",
+        "name": "Aktobe – Emba – Shalkar Highway",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            57.21,
+            50.28
+          ],
+          [
+            57.33,
+            49.9
+          ],
+          [
+            57.42,
+            49.47
+          ],
+          [
+            58.14,
+            48.83
+          ],
+          [
+            59.6,
+            47.83
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-21",
+      "properties": {
+        "ref": "A21",
+        "name": "Northern Agricultural Corridor (Kostanay – Kokshetau)",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            63.63,
+            53.21
+          ],
+          [
+            65.13,
+            53.58
+          ],
+          [
+            66.5,
+            53.6
+          ],
+          [
+            68,
+            53.45
+          ],
+          [
+            69.38,
+            53.28
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-22",
+      "properties": {
+        "ref": "P24",
+        "name": "Oskemen – Ridder Altai Alpine Highway",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            82.61,
+            49.95
+          ],
+          [
+            83.05,
+            50.15
+          ],
+          [
+            83.51,
+            50.34
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-23",
+      "properties": {
+        "ref": "P25",
+        "name": "Oskemen – Bukhtarma Reservoir – Altay Highway",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            82.61,
+            49.95
+          ],
+          [
+            83.35,
+            49.65
+          ],
+          [
+            83.95,
+            49.72
+          ],
+          [
+            84.27,
+            49.73
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-24",
+      "properties": {
+        "ref": "P16",
+        "name": "Semey – Kurchatov Irtysh Valley Road",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            80.26,
+            50.43
+          ],
+          [
+            79.4,
+            50.6
+          ],
+          [
+            78.54,
+            50.75
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-25",
+      "properties": {
+        "ref": "P4",
+        "name": "Karaganda – Karkaraly National Park Road",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.1,
+            49.8
+          ],
+          [
+            74.2,
+            49.65
+          ],
+          [
+            75.47,
+            49.41
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-26",
+      "properties": {
+        "ref": "A36",
+        "name": "Taraz – Tashotkel Reservoir Highway",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            71.37,
+            42.9
+          ],
+          [
+            72.5,
+            43.15
+          ],
+          [
+            73.87,
+            43.38
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "road-27",
+      "properties": {
+        "ref": "A20",
+        "name": "Shardara Dam Access Highway",
+        "class": "primary",
+        "highway": "primary",
+        "lanes": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            69.59,
+            42.32
+          ],
+          [
+            68.8,
+            41.85
+          ],
+          [
+            67.96,
+            41.24
+          ]
+        ]
+      }
+    }
+  ]
+}

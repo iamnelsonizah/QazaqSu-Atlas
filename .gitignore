@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.venv
+.env*.local
+.env
+*.tsbuildinfo
+next-env.d.ts
+rsis_kz.html
+
+# Large PMTiles files (>25MB) exceed Cloudflare Pages single-file asset limit
+# Host these on Cloudflare R2 or GitHub Releases and configure NEXT_PUBLIC_*_PMTILES
+public/data/hydrorivers.pmtiles
+public/data/hydrolakes.pmtiles

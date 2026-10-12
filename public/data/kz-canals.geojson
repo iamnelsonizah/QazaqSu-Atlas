@@ -1,0 +1,270 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "canal-satpayev",
+        "name": "Kanysh Satpayev Canal (Irtysh–Karaganda)",
+        "name_kk": "Қаныш Сәтбаев атындағы канал",
+        "name_ru": "Канал имени Каныша Сатпаева",
+        "lengthKm": 458,
+        "capacityM3s": 75,
+        "pumpingStations": 22,
+        "liftMeters": 418,
+        "source": "Irtysh River (Aksu)",
+        "destination": "Nura River, Karaganda & Astana",
+        "purpose": "Inter-basin municipal and metallurgical water transfer"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            76.92,
+            52.05
+          ],
+          [
+            76.75,
+            52
+          ],
+          [
+            76.45,
+            51.92
+          ],
+          [
+            76.1,
+            51.85
+          ],
+          [
+            75.7,
+            51.8
+          ],
+          [
+            75.32,
+            51.72
+          ],
+          [
+            74.95,
+            51.6
+          ],
+          [
+            74.6,
+            51.45
+          ],
+          [
+            74.25,
+            51.25
+          ],
+          [
+            73.9,
+            50.95
+          ],
+          [
+            73.65,
+            50.6
+          ],
+          [
+            73.45,
+            50.3
+          ],
+          [
+            73.25,
+            50.05
+          ],
+          [
+            73.15,
+            49.85
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "canal-satpayev-astana-branch",
+        "name": "Satpayev Canal – Astana Pipeline Conduit",
+        "name_kk": "Сәтбаев каналы – Астана су құбыры",
+        "name_ru": "Водовод канала Сатпаева к Астане",
+        "lengthKm": 145,
+        "capacityM3s": 18,
+        "source": "Satpayev Canal (Nura junction)",
+        "destination": "Vyacheslavskoye (Astana) Reservoir",
+        "purpose": "Capital city water supply emergency reinforcement"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.65,
+            50.6
+          ],
+          [
+            73.2,
+            50.8
+          ],
+          [
+            72.75,
+            51
+          ],
+          [
+            72.4,
+            51.1
+          ],
+          [
+            72.158,
+            51.196
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "canal-bak",
+        "name": "Great Almaty Canal (BAK named after D. Kunayev)",
+        "name_kk": "Д. Қонаев атындағы Үлкен Алматы каналы (ҮАК)",
+        "name_ru": "Большой Алматинский канал имени Д. Кунаева (БАК)",
+        "lengthKm": 168,
+        "capacityM3s": 30,
+        "source": "Bartogay Reservoir (Chilik River)",
+        "destination": "Kurty River / Almaty piedmont irrigation",
+        "purpose": "Tian Shan foothill irrigation and Almaty urban buffer"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            78.495,
+            43.368
+          ],
+          [
+            78.3,
+            43.42
+          ],
+          [
+            78.05,
+            43.48
+          ],
+          [
+            77.75,
+            43.49
+          ],
+          [
+            77.45,
+            43.45
+          ],
+          [
+            77.2,
+            43.38
+          ],
+          [
+            76.95,
+            43.35
+          ],
+          [
+            76.75,
+            43.42
+          ],
+          [
+            76.55,
+            43.55
+          ],
+          [
+            76.528,
+            43.672
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "canal-koksaray",
+        "name": "Koksaray Flood Regulator Canal & Bypass",
+        "name_kk": "Көксарай су реттегішінің арнасы",
+        "name_ru": "Канал Коксарайского контррегулятора",
+        "lengthKm": 55,
+        "capacityM3s": 500,
+        "source": "Syr Darya (downstream of Shardara)",
+        "destination": "Koksaray off-stream reservoir (3.0 km³)",
+        "purpose": "Winter flood diversion and summer irrigation storage"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            68.1,
+            42.82
+          ],
+          [
+            68.07,
+            42.87
+          ],
+          [
+            68.02,
+            42.92
+          ],
+          [
+            67.97,
+            42.98
+          ],
+          [
+            67.9,
+            43.02
+          ],
+          [
+            67.85,
+            43.06
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "canal-arys-turkistan",
+        "name": "Arys–Turkistan Irrigation Canal",
+        "name_kk": "Арыс–Түркістан каналы",
+        "name_ru": "Арыс-Туркестанский канал",
+        "lengthKm": 195,
+        "capacityM3s": 45,
+        "source": "Arys River",
+        "destination": "Bogen Reservoir & Turkistan oasis",
+        "purpose": "Oasis agriculture and Syr Darya sub-basin regulation"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            69.18,
+            42.42
+          ],
+          [
+            69.05,
+            42.55
+          ],
+          [
+            68.95,
+            42.7
+          ],
+          [
+            68.79,
+            42.855
+          ],
+          [
+            68.65,
+            43
+          ],
+          [
+            68.45,
+            43.15
+          ],
+          [
+            68.25,
+            43.3
+          ]
+        ]
+      }
+    }
+  ]
+}
