@@ -1,12 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LAYERS, LAYER_GROUPS, type LayerId } from '@/lib/layers';
 import type { Lang } from '@/lib/types';
 import { tr } from '@/lib/i18n';
 
 export default function LayerBar({ layers, toggle, lang }: { layers: Set<LayerId>; toggle: (id: LayerId) => void; lang: Lang }) {
   const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    const compact = window.matchMedia('(max-width: 900px)');
+    const syncToViewport = (event: MediaQueryList | MediaQueryListEvent) => setCollapsed(event.matches);
+    syncToViewport(compact);
+    compact.addEventListener('change', syncToViewport);
+    return () => compact.removeEventListener('change', syncToViewport);
+  }, []);
   const activeCount = Array.from(layers).length;
 
   if (collapsed) {

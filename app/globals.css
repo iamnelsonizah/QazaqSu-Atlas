@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   --bg: #eef3f4;
   --panel: #ffffff;
   --ink: #0f2a33;
@@ -13,6 +14,7 @@
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
 }
 :root[data-theme='dark'] {
+  color-scheme: dark;
   --bg: #0c1a20;
   --panel: #12262e;
   --ink: #e6f0f3;
@@ -247,6 +249,24 @@ tr:last-child td { border-bottom: 0; }
 .hbar-val { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
 
 /* ---------- detail drawer (slide-over) ---------- */
+.detail-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 110;
+}
+.detail-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: rgba(3, 12, 17, 0.42);
+  backdrop-filter: blur(1.5px);
+}
 .detail-drawer {
   position: absolute;
   top: 0;
@@ -257,7 +277,7 @@ tr:last-child td { border-bottom: 0; }
   background: color-mix(in srgb, var(--panel) 97%, transparent);
   backdrop-filter: blur(12px);
   border-left: 1px solid var(--line);
-  z-index: 10;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   box-shadow: -8px 0 28px rgba(0, 0, 0, 0.28);
@@ -1089,12 +1109,13 @@ tr:last-child td { border-bottom: 0; }
   .detail-drawer {
     width: 100%;
     max-width: 100%;
-    top: auto;
+    top: 0;
     bottom: 0;
-    height: min(68dvh, 680px);
-    max-height: calc(100dvh - 12px);
+    height: auto;
+    max-height: none;
     border-left: 0;
-    border-top: 2px solid var(--line);
+    border-top: 1px solid var(--line);
+    border-radius: 16px 16px 0 0;
     animation: drawerSlideInMobile 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   @keyframes drawerSlideInMobile {

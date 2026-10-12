@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BASEMAPS, BASEMAP_PROVIDER, type BasemapId } from '@/lib/basemaps';
 import { loadBasins, loadBorder, loadCanals, loadLakes, loadMask, loadRegionLabels, loadRegions, loadRivers, REGION_LABELS_FC } from '@/lib/data';
 import { DEFAULT_LAYERS, type LayerId } from '@/lib/layers';
@@ -42,7 +42,11 @@ const LANGS: { id: Lang; label: string }[] = [
 export default function Atlas() {
   const [tab, setTab] = useState<TabId>('map');
   const [lang, setLang] = useState<Lang>('en');
-  const [dark, setDark] = useState(false);
+  const [themeMode, setThemeMode] = useState<'system' | 'light' | 'dark'>('system');
+  const [systemDark, setSystemDark] = useState(false);
+  const [themeReady, setThemeReady] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(112);
+  const headerRef = useRef<HTMLElement>(null);
   const [basemap, setBasemap] = useState<BasemapId>('map');
   const [layers, setLayers] = useState<Set<LayerId>>(new Set(DEFAULT_LAYERS));
   const [types, setTypes] = useState<Set<PlaceType>>(new Set(ALL_TYPES));
@@ -66,6 +70,7 @@ export default function Atlas() {
   const [refreshingFlood, setRefreshingFlood] = useState(false);
   const [wState, setWState] = useState<LoadState>('loading');
   const [fState, setFState] = useState<LoadState>('loading');
+  const dark = themeMode === 'dark' || (themeMode === 'system' && systemDark);
 
   const refreshFlood = useCallback(async (signal?: AbortSignal) => {
     setRefreshingFlood(true);
@@ -87,8 +92,41 @@ export default function Atlas() {
   }, []);
 
   useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    let saved: string | null = null;
+    try { saved = window.localStorage.getItem('kz-water-atlas-theme'); } catch {}
+    if (saved === 'dark' || saved === 'light') setThemeMode(saved);
+    setSystemDark(media.matches);
+    setThemeReady(true);
+
+    const syncSystemTheme = (event: MediaQueryListEvent) => setSystemDark(event.matches);
+    media.addEventListener('change', syncSystemTheme);
+    return () => media.removeEventListener('change', syncSystemTheme);
+  }, []);
+
+  useEffect(() => {
+    if (!themeReady) return;
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  }, [dark]);
+  }, [dark, themeReady]);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const updateHeight = () => setHeaderHeight(Math.ceil(header.getBoundingClientRect().height));
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
+  const toggleTheme = () => {
+    const nextMode = themeMode === 'system' ? (systemDark ? 'light' : 'dark') : 'system';
+    setThemeMode(nextMode);
+    try {
+      if (nextMode === 'system') window.localStorage.removeItem('kz-water-atlas-theme');
+      else window.localStorage.setItem('kz-water-atlas-theme', nextMode);
+    } catch {}
+  };
 
   useEffect(() => {
     const saved = window.localStorage.getItem('kz-water-atlas-lang');
@@ -171,7 +209,7 @@ export default function Atlas() {
 
   return (
     <div className="app">
-      <header className="top">
+      <header className="top" ref={headerRef}>
         <div className="brand">
           <svg width="30" height="38" viewBox="0 0 30 38" aria-hidden="true">
             <path d="M15 1C15 1 3 15 3 24a12 12 0 0 0 24 0C27 15 15 1 15 1Z" fill="var(--accent)" />
@@ -188,7 +226,12 @@ export default function Atlas() {
               <button key={l.id} className={lang === l.id ? 'on' : ''} aria-pressed={lang === l.id} onClick={() => setLang(l.id)}>{l.label}</button>
             ))}
           </div>
-          <button className="icon-btn" onClick={() => setDark((d) => !d)} aria-label={tr(lang, 'Toggle dark mode')} title={tr(lang, 'Toggle dark mode')}>
+          <button
+            className="icon-btn"
+            onClick={toggleTheme}
+            aria-label={tr(lang, 'Toggle dark mode')}
+            title={tr(lang, themeMode === 'system' ? 'Theme follows system' : 'Use system theme')}
+          >
             {dark ? '☀' : '☾'}
           </button>
         </div>
@@ -244,16 +287,6 @@ export default function Atlas() {
               </div>
             )}
             <div className="provider">Basemap: {BASEMAP_PROVIDER}</div>
-            {selected && (
-              <DetailDrawer
-                place={selected}
-                allPlaces={PLACES}
-                floodPoints={flood}
-                lang={lang}
-                onClose={() => setSelectedId(null)}
-                onSelectPlace={setSelectedId}
-              />
-            )}
           </div>
         </section>
 
@@ -278,6 +311,24 @@ export default function Atlas() {
         {tab === 'stats' && <Statistics lang={lang} />}
         {tab === 'data' && <DataSources lang={lang} />}
       </main>
+      {tab === 'map' && selected && (
+        <div className="detail-overlay" style={{ top: headerHeight }}>
+          <button
+            className="detail-backdrop"
+            onClick={() => setSelectedId(null)}
+            aria-label={tr(lang, 'Close details panel')}
+            tabIndex={-1}
+          />
+          <DetailDrawer
+            place={selected}
+            allPlaces={PLACES}
+            floodPoints={flood}
+            lang={lang}
+            onClose={() => setSelectedId(null)}
+            onSelectPlace={setSelectedId}
+          />
+        </div>
+      )}
     </div>
   );
 }

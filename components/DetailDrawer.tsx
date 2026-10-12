@@ -167,7 +167,7 @@ export default function DetailDrawer({
     `https://en.wikipedia.org/wiki/${encodeURIComponent(place.name.en.replace(/\s+River$/, ''))}`;
 
   return (
-    <aside className="detail-drawer" aria-label={tr(lang, 'Details for {name}').replace('{name}', title)}>
+    <aside className="detail-drawer" role="dialog" aria-modal="true" aria-label={tr(lang, 'Details for {name}').replace('{name}', title)}>
       {/* Drawer Header */}
       <div className="drawer-header">
         <div className="drawer-top-row">
