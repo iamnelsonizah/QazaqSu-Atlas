@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LAYERS, type LayerId } from '@/lib/layers';
 import { TYPE_META, TYPE_ORDER } from '@/lib/places';
 import type { PlaceType } from '@/lib/types';
@@ -9,6 +9,13 @@ import { tr } from '@/lib/i18n';
 
 export default function Legend({ layers, types, lang }: { layers: Set<LayerId>; types: Set<PlaceType>; lang: Lang }) {
   const [open, setOpen] = useState(true);
+  useEffect(() => {
+    const compact = window.matchMedia('(max-width: 900px)');
+    const syncToViewport = (event: MediaQueryList | MediaQueryListEvent) => setOpen(!event.matches);
+    syncToViewport(compact);
+    compact.addEventListener('change', syncToViewport);
+    return () => compact.removeEventListener('change', syncToViewport);
+  }, []);
   const active = LAYERS.filter((l) => layers.has(l.id) && !l.needs);
   return (
     <div className="legend">

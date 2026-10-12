@@ -66,7 +66,7 @@ export default function Statistics({ lang }: { lang: Lang }) {
             {tr(lang, "Percentage of total annual river runoff originating outside Kazakhstan's borders. National average:")} <strong>{formatNumber(46.7, lang, { maximumFractionDigits: 1 })}%</strong> ({tr(lang, '47.8 of 102.3 km³/yr')}).
           </p>
           {BASIN_DEPENDENCE_BARS.map((b) => (
-            <div className="hbar" key={b.name} style={{ gridTemplateColumns: '160px 1fr 140px' }}>
+            <div className="hbar hbar-basin" key={b.name}>
               <span className="hbar-name" style={{ fontWeight: 600 }}>{tr(lang, b.name)}</span>
               <span className="hbar-track">
                 <span style={{ width: `${Math.max(b.ratio > 0 ? 4 : 0, b.ratio)}%`, background: b.color }} />
