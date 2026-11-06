@@ -49,7 +49,12 @@ export async function fetchWeather(signal?: AbortSignal): Promise<WeatherPoint[]
   });
 }
 
-function levelOf(ratio: number | null): AlertLevel {
+// Below this flow (m³/s) the model cell is a trickle or off the main channel, so a
+// ratio is meaningless: 0.12 → 0.34 reads as ×2.8 but is not a flood signal.
+export const MIN_ALERT_FLOW = 5;
+
+function levelOf(ratio: number | null, base: number | null, peak: number | null): AlertLevel {
+  if (base != null && peak != null && Math.max(base, peak) < MIN_ALERT_FLOW) return 'lowflow';
   if (ratio == null || !isFinite(ratio)) return 'nodata';
   if (ratio >= 2) return 'warning';
   if (ratio >= 1.4) return 'watch';
@@ -83,7 +88,7 @@ export async function fetchFlood(signal?: AbortSignal): Promise<FloodPoint[]> {
       peak,
       base,
       ratio,
-      level: levelOf(ratio),
+      level: levelOf(ratio, base, peak),
       series: t.map((d, k) => ({ date: d, q: q[k] ?? null })),
     };
   });

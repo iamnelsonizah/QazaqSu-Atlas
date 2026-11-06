@@ -3,9 +3,24 @@
 import { useEffect, useState } from 'react';
 import { LAYERS, LAYER_GROUPS, type LayerId } from '@/lib/layers';
 import type { Lang } from '@/lib/types';
+import { BASEMAPS, type BasemapId } from '@/lib/basemaps';
 import { tr } from '@/lib/i18n';
 
-export default function LayerBar({ layers, toggle, lang }: { layers: Set<LayerId>; toggle: (id: LayerId) => void; lang: Lang }) {
+interface Props {
+  layers: Set<LayerId>;
+  toggle: (id: LayerId) => void;
+  lang: Lang;
+  basemap: BasemapId;
+  setBasemap: (id: BasemapId) => void;
+}
+
+const LAYERS_ICON = (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 13 9 5 9-5" />
+  </svg>
+);
+
+export default function LayerBar({ layers, toggle, lang, basemap, setBasemap }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
     const compact = window.matchMedia('(max-width: 900px)');
@@ -24,8 +39,8 @@ export default function LayerBar({ layers, toggle, lang }: { layers: Set<LayerId
           onClick={() => setCollapsed(false)}
           title={tr(lang, 'Show map layer controls')}
         >
-          <span className="dot" />
-          <b>{tr(lang, 'Layers')}</b> ({activeCount} {tr(lang, 'active')}) <span className="chev">▾</span>
+          {LAYERS_ICON}
+          <b>{tr(lang, 'Layers')}</b> <span className="layer-count">{activeCount}</span>
         </button>
       </div>
     );
@@ -34,13 +49,20 @@ export default function LayerBar({ layers, toggle, lang }: { layers: Set<LayerId
   return (
     <div className="layerbar" role="group" aria-label={tr(lang, 'Map layers')}>
       <div className="layerbar-head">
+        <span className="layerbar-title">{LAYERS_ICON}{tr(lang, 'Map layers')}</span>
         <button
           className="layerbar-collapse-btn"
           onClick={() => setCollapsed(true)}
           title={tr(lang, 'Minimize layer bar to see more map')}
         >
-          {tr(lang, 'Hide layers')} ▴
+          <span className="hide-text">{tr(lang, 'Hide layers')} ▴</span>
+          <span className="close-x" aria-hidden="true">×</span>
         </button>
+      </div>
+      <div className="layer-basemaps" role="group" aria-label={tr(lang, 'Basemap')}>
+        {BASEMAPS.map((b) => (
+          <button key={b.id} className={basemap === b.id ? 'on' : ''} aria-pressed={basemap === b.id} onClick={() => setBasemap(b.id)}>{tr(lang, b.label)}</button>
+        ))}
       </div>
       <div className="layerbar-content">
         {LAYER_GROUPS.map((g) => {

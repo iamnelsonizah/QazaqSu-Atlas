@@ -23,14 +23,33 @@ import DataSources from './tabs/DataSources';
 const MapView = dynamic(() => import('./MapView'), { ssr: false, loading: () => <div className="map-canvas map-loading">Loading map…</div> });
 
 const TABS = [
-  { id: 'map', label: 'Map' },
-  { id: 'flood', label: 'Flood watch' },
-  { id: 'rain', label: 'Rain and harvesting' },
-  { id: 'basins', label: 'Basins and groundwater' },
-  { id: 'stats', label: 'Statistics' },
-  { id: 'data', label: 'Data and sources' },
+  { id: 'map', label: 'Map', short: 'Map' },
+  { id: 'flood', label: 'Flood watch', short: 'Floods' },
+  { id: 'rain', label: 'Rain and harvesting', short: 'Rain' },
+  { id: 'basins', label: 'Basins and groundwater', short: 'Basins' },
+  { id: 'stats', label: 'Statistics', short: 'Statistics' },
+  { id: 'data', label: 'Data and sources', short: 'Sources' },
 ] as const;
 type TabId = (typeof TABS)[number]['id'];
+const PRIMARY_TABS: TabId[] = ['map', 'flood', 'rain', 'basins'];
+const MORE_TABS: TabId[] = ['stats', 'data'];
+
+const ICON_PATHS: Record<TabId | 'more', string> = {
+  map: 'M9 4 3 6.5v13L9 17l6 2.5 6-2.5V4l-6 2.5L9 4Zm0 0v13m6-10.5v13',
+  flood: 'M3 15c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0M3 19.5c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0M12 3v8m-3.5-3.5L12 11l3.5-3.5',
+  rain: 'M7 15a4 4 0 0 1-.6-7.95A5.5 5.5 0 0 1 17 6.5a4 4 0 0 1 .5 8M8 18l-1 2.5m5-2.5-1 2.5m5-2.5-1 2.5',
+  basins: 'M12 3c-2 3.5-6 6-6 10a6 6 0 0 0 12 0c0-4-4-6.5-6-10Zm-3 11c.8 1.6 2 2.4 3.5 2.4',
+  stats: 'M4 20h16M7 16v-5m5 5V7m5 9v-3',
+  data: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3Zm0 0v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+  more: 'M5 12h.01M12 12h.01M19 12h.01',
+};
+function TabIcon({ id }: { id: TabId | 'more' }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={id === 'more' ? 3 : 1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={ICON_PATHS[id]} />
+    </svg>
+  );
+}
 
 const ALL_TYPES: PlaceType[] = ['dam', 'lake', 'river', 'ramsar', 'gauge', 'basinhq'];
 const LANGS: { id: Lang; label: string }[] = [
@@ -53,6 +72,7 @@ export default function Atlas() {
   const [filters, setFilters] = useState<Filters>({ q: '', region: '', basin: '', verification: '', sort: 'largest' as SortId });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const [geo, setGeo] = useState<GeoBundle>({
     regions: EMPTY_FC,
@@ -206,6 +226,8 @@ export default function Atlas() {
     setTypes(new Set(ALL_TYPES));
   };
   const selected = PLACES.find((p) => p.id === selectedId);
+  const activeFilters = [filters.region, filters.basin, filters.verification].filter(Boolean).length
+    + (types.size !== ALL_TYPES.length || ALL_TYPES.some((t) => !types.has(t)) ? 1 : 0);
 
   return (
     <div className="app">
@@ -216,7 +238,10 @@ export default function Atlas() {
             <path d="M9 25c2-3 4 1 6-1s4 1 6-1" stroke="#fff" strokeWidth="1.6" fill="none" strokeLinecap="round" />
           </svg>
           <div>
-            <h1>{tr(lang, 'QazaqSu Atlas: Kazakhstan Water Atlas')}</h1>
+            <h1>
+              <span className="brand-full">{tr(lang, 'QazaqSu Atlas: Kazakhstan Water Atlas')}</span>
+              <span className="brand-short" aria-hidden="true">QazaqSu<small>{tr(lang, 'Kazakhstan Water Atlas')}</small></span>
+            </h1>
             <p>{tr(lang, 'Rivers, dams, lakes, wetlands, groundwater and flood watch · 17 regions and 3 cities')}</p>
           </div>
         </div>
@@ -255,6 +280,7 @@ export default function Atlas() {
             selectedId={selectedId}
             onSelect={setSelectedId}
             onReset={resetFilters}
+            activeFilters={activeFilters}
           />
           <div className="map-wrap">
             <MapView
@@ -278,7 +304,7 @@ export default function Atlas() {
                 <button key={b.id} className={basemap === b.id ? 'on' : ''} onClick={() => setBasemap(b.id)}>{tr(lang, b.label)}</button>
               ))}
             </div>
-            <LayerBar layers={layers} toggle={toggleLayer} lang={lang} />
+            <LayerBar layers={layers} toggle={toggleLayer} lang={lang} basemap={basemap} setBasemap={setBasemap} />
             <Legend layers={layers} types={types} lang={lang} />
             {notice && (
               <div className="notice" role="status">
@@ -311,6 +337,44 @@ export default function Atlas() {
         {tab === 'stats' && <Statistics lang={lang} />}
         {tab === 'data' && <DataSources lang={lang} />}
       </main>
+
+      <nav className="bottom-nav" aria-label={tr(lang, 'Sections')}>
+        {PRIMARY_TABS.map((id) => {
+          const t = TABS.find((x) => x.id === id)!;
+          return (
+            <button key={id} className={tab === id ? 'on' : ''} aria-current={tab === id ? 'page' : undefined} onClick={() => { setTab(id); setMoreOpen(false); }}>
+              <TabIcon id={id} />
+              <span>{tr(lang, t.short)}</span>
+            </button>
+          );
+        })}
+        <button
+          className={MORE_TABS.includes(tab) || moreOpen ? 'on' : ''}
+          aria-expanded={moreOpen}
+          aria-haspopup="menu"
+          onClick={() => setMoreOpen((o) => !o)}
+        >
+          <TabIcon id="more" />
+          <span>{tr(lang, 'More')}</span>
+        </button>
+        {moreOpen && (
+          <>
+            <button className="more-backdrop" aria-label={tr(lang, 'Close menu')} tabIndex={-1} onClick={() => setMoreOpen(false)} />
+            <div className="more-menu" role="menu">
+              {MORE_TABS.map((id) => {
+                const t = TABS.find((x) => x.id === id)!;
+                return (
+                  <button key={id} role="menuitem" className={tab === id ? 'on' : ''} onClick={() => { setTab(id); setMoreOpen(false); }}>
+                    <TabIcon id={id} />
+                    {tr(lang, t.label)}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </nav>
+
       {tab === 'map' && selected && (
         <div className="detail-overlay" style={{ top: headerHeight }}>
           <button

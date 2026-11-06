@@ -9,7 +9,7 @@ import { PAST_FLOODS } from '@/lib/floods';
 import { placeProps, placesToGeoJSON, TYPE_META, REGION_BOUNDS, BASIN_BOUNDS, REGION_SHAPE_NAMES, PLACES, nameOf } from '@/lib/places';
 import { stressLabel } from '@/lib/stress';
 import { formatNumber, tr } from '@/lib/i18n';
-import { EMPTY_FC, type FC, type FloodPoint, type Lang, type Place, type WeatherPoint } from '@/lib/types';
+import { ALERT_LABEL, EMPTY_FC, type AlertLevel, type FC, type FloodPoint, type Lang, type Place, type WeatherPoint } from '@/lib/types';
 
 export interface GeoBundle {
   regions: FC;
@@ -117,7 +117,7 @@ function popupEl(
   } else if (layer === 'alerts-circle') {
     const place = PLACES.find((item) => item.id === p.id);
     root.append(el('strong', place ? nameOf(place, lang) : p.name));
-    root.append(el('div', `${tr(lang, 'River flow:')} ${tr(lang, String(p.level).toLowerCase())}`, 'popup-sub'));
+    root.append(el('div', `${tr(lang, 'River flow:')} ${tr(lang, ALERT_LABEL[p.level as AlertLevel] ?? 'No data').toLowerCase()}`, 'popup-sub'));
     row(root, tr(lang, 'Flow now'), p.now != null && p.now !== 'null' ? `${formatNumber(Number(p.now), lang, { maximumFractionDigits: 0 })} ${tr(lang, 'm³/s')}` : undefined);
     row(root, tr(lang, '7-day peak'), p.peak != null && p.peak !== 'null' ? `${formatNumber(Number(p.peak), lang, { maximumFractionDigits: 0 })} ${tr(lang, 'm³/s')}` : undefined);
     row(root, tr(lang, 'Peak vs last week'), p.ratio != null && p.ratio !== 'null' ? `×${formatNumber(Number(p.ratio), lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : undefined);
@@ -660,8 +660,8 @@ export default function MapView(props: Props) {
     geo('floods', PAST_FLOODS);
     addLayer({ id: 'floods-circle', type: 'circle', source: 'floods', paint: { 'circle-color': '#d86a4a', 'circle-opacity': 0.55, 'circle-radius': ['get', 'r'], 'circle-stroke-color': '#a8432a', 'circle-stroke-width': 1.5 } });
     geo('alerts', alertFC(p.flood, p.lang));
-    addLayer({ id: 'alerts-halo', type: 'circle', source: 'alerts', paint: { 'circle-radius': 14, 'circle-opacity': 0.25, 'circle-color': ['match', ['get', 'level'], 'warning', '#c62828', 'watch', '#e0a100', 'nodata', '#9aa5ab', '#4a9d6a'] } });
-    addLayer({ id: 'alerts-circle', type: 'circle', source: 'alerts', paint: { 'circle-radius': 7, 'circle-color': ['match', ['get', 'level'], 'warning', '#c62828', 'watch', '#e0a100', 'nodata', '#9aa5ab', '#4a9d6a'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+    addLayer({ id: 'alerts-halo', type: 'circle', source: 'alerts', paint: { 'circle-radius': 14, 'circle-opacity': 0.25, 'circle-color': ['match', ['get', 'level'], 'warning', '#c62828', 'watch', '#e0a100', 'nodata', '#9aa5ab', 'lowflow', '#9aa5ab', '#4a9d6a'] } });
+    addLayer({ id: 'alerts-circle', type: 'circle', source: 'alerts', paint: { 'circle-radius': 7, 'circle-color': ['match', ['get', 'level'], 'warning', '#c62828', 'watch', '#e0a100', 'nodata', '#9aa5ab', 'lowflow', '#9aa5ab', '#4a9d6a'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
     geo('rain', weatherFC(p.weather));
     addLayer({ id: 'rain-y', type: 'circle', source: 'rain', paint: { 'circle-color': '#3a7bd5', 'circle-opacity': 0.55, 'circle-stroke-color': '#1d4f9c', 'circle-stroke-width': 1, 'circle-radius': ['interpolate', ['linear'], ['get', 'y'], 0, 3, 5, 10, 25, 22] } });
     addLayer({ id: 'rain-3d', type: 'circle', source: 'rain', paint: { 'circle-color': '#7a4fd1', 'circle-opacity': 0.5, 'circle-stroke-color': '#4d2a9c', 'circle-stroke-width': 1, 'circle-radius': ['interpolate', ['linear'], ['get', 'f3'], 0, 3, 10, 11, 40, 24] } });
@@ -858,6 +858,9 @@ export default function MapView(props: Props) {
       applied.current = {};
       sync.current();
 
+      if (!P.current.region && window.innerWidth <= 900) {
+        map.fitBounds([[46.5, 40.5], [87.3, 55.5]], { padding: { top: 56, bottom: 16, left: 12, right: 12 }, duration: 0 });
+      }
       // If initial region is present on map load, zoom to it
       if (P.current.region && REGION_BOUNDS[P.current.region]) {
         const b = REGION_BOUNDS[P.current.region];
@@ -1032,7 +1035,7 @@ export default function MapView(props: Props) {
       zoom: Math.max(map.getZoom(), TYPE_ZOOM[place.type] ?? 7),
       speed: 1.2,
       padding: isMobile
-        ? { top: 60, bottom: 280, left: 20, right: 20 }
+        ? { top: 60, bottom: 40, left: 20, right: 20 }
         : { top: 80, bottom: 40, left: 40, right: 460 },
     });
   }, [props.selectedId]);

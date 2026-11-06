@@ -93,7 +93,8 @@ export interface WeatherPoint {
   days: { date: string; precip: number }[];
 }
 
-export type AlertLevel = 'normal' | 'watch' | 'warning' | 'nodata';
+export type AlertLevel = 'normal' | 'watch' | 'warning' | 'lowflow' | 'nodata';
+export const ALERT_LABEL: Record<AlertLevel, string> = { normal: 'Normal', watch: 'Watch', warning: 'Warning', lowflow: 'Low flow', nodata: 'No data' };
 export interface FloodPoint {
   id: string;
   name: string;
