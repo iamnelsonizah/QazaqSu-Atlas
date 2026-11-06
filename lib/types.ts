@@ -105,7 +105,12 @@ export interface FloodPoint {
   base: number | null;
   ratio: number | null;
   level: AlertLevel;
+  /** 14 days: 7 past + today + 6 forecast (series[7] is today). */
   series: { date: string; q: number | null }[];
+  /** 30 past days + 7 forecast days with the ensemble 25–75% range; history[todayIndex] is today. */
+  history: FlowDay[];
+  todayIndex: number;
 }
+export interface FlowDay { date: string; q: number | null; p25: number | null; p75: number | null }
 
 export type LoadState = 'idle' | 'loading' | 'ok' | 'error';

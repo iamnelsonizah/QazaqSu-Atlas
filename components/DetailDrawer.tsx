@@ -7,9 +7,11 @@ import { TYPE_META, getAssociatedFeatures, nameOf } from '@/lib/places';
 import {
   fetchPlaceFlow,
   fetchPlaceWeather,
+  MIN_ALERT_FLOW,
   type PlaceFlowData,
   type PlaceWeatherDay,
 } from '@/lib/openmeteo';
+import FlowChart from './FlowChart';
 
 interface Props {
   place: Place;
@@ -692,20 +694,20 @@ export default function DetailDrawer({
           {flowLoading ? (
             <div className="chart-loading">{tr(lang, 'Loading live GloFAS flow model…')}</div>
           ) : flowData && flowData.hasData && flowData.series.length > 0 ? (
-            <div className="hydrograph-wrap">
-              <HydrographSvg data={flowData} lang={lang} />
-              <div className="hydrograph-legend">
-                <span className="leg-item">
-                  <span className="leg-line-solid" /> {tr(lang, 'Modelled flow')}
-                </span>
-                <span className="leg-item">
-                  <span className="leg-line-dashed" /> {tr(lang, 'Forecast (ensemble median)')}
-                </span>
-                <span className="leg-item">
-                  <span className="leg-box-range" /> {tr(lang, 'Forecast range (25–75%)')}
-                </span>
-              </div>
-            </div>
+            <FlowChart
+              days={flowData.series.map((d, i) => ({
+                date: d.date,
+                q: i <= flowData.todayIndex ? d.actual : d.median ?? d.actual,
+                p25: d.p25,
+                p75: d.p75,
+              }))}
+              todayIndex={flowData.todayIndex}
+              base={gaugeBase(place, flowData)}
+              label={nameOf(place, lang)}
+              forecastLabel="Forecast (ensemble median)"
+              lang={lang}
+              height={160}
+            />
           ) : (
             <div className="flow-nodata-box">
               <div className="flow-nodata-header">
@@ -841,184 +843,12 @@ export default function DetailDrawer({
 /**
  * Interactive SVG Hydrograph matching the Nigeria Water Atlas GloFAS discharge curve
  */
-function HydrographSvg({ data, lang }: { data: PlaceFlowData; lang: Lang }) {
-  const { series, todayIndex, maxQ } = data;
-  const N = series.length;
-  if (N < 2) return null;
-
-  const svgW = 380;
-  const svgH = 145;
-  const padL = 36;
-  const padR = 14;
-  const padT = 16;
-  const padB = 26;
-  const plotW = svgW - padL - padR;
-  const plotH = svgH - padT - padB;
-
-  // Nice round max tick
-  let topTick = 100;
-  if (maxQ > 800) topTick = Math.ceil(maxQ / 200) * 200;
-  else if (maxQ > 300) topTick = Math.ceil(maxQ / 100) * 100;
-  else if (maxQ > 120) topTick = Math.ceil(maxQ / 50) * 50;
-  else if (maxQ > 40) topTick = Math.ceil(maxQ / 20) * 20;
-  else topTick = Math.ceil(maxQ / 10) * 10;
-  if (topTick < maxQ) topTick = maxQ;
-  const midTick = Math.round(topTick / 2);
-
-  const getX = (i: number) => padL + (i / (N - 1)) * plotW;
-  const getY = (val: number | null) => {
-    if (val == null) return padT + plotH;
-    const clamped = Math.max(0, Math.min(topTick, val));
-    return padT + plotH - (clamped / topTick) * plotH;
-  };
-
-  // Historical modelled flow path
-  let actualPath = '';
-  for (let i = 0; i <= todayIndex && i < N; i++) {
-    const val = series[i].actual ?? series[i].median;
-    if (val != null) {
-      const cmd = actualPath === '' ? 'M' : 'L';
-      actualPath += `${cmd} ${getX(i).toFixed(1)} ${getY(val).toFixed(1)} `;
-    }
-  }
-
-  // Forecast ensemble median path
-  let forecastPath = '';
-  for (let i = todayIndex; i < N; i++) {
-    const val = series[i].median ?? series[i].actual;
-    if (val != null) {
-      const cmd = forecastPath === '' ? 'M' : 'L';
-      forecastPath += `${cmd} ${getX(i).toFixed(1)} ${getY(val).toFixed(1)} `;
-    }
-  }
-
-  // Forecast range band (p25 to p75)
-  let bandPath = '';
-  const rangePoints: { x: number; y25: number; y75: number }[] = [];
-  for (let i = todayIndex; i < N; i++) {
-    const p25 = series[i].p25 ?? (series[i].median != null ? series[i].median! * 0.8 : null);
-    const p75 = series[i].p75 ?? (series[i].median != null ? series[i].median! * 1.25 : null);
-    if (p25 != null && p75 != null) {
-      rangePoints.push({ x: getX(i), y25: getY(p25), y75: getY(p75) });
-    }
-  }
-
-  if (rangePoints.length > 1) {
-    bandPath = `M ${rangePoints[0].x.toFixed(1)} ${rangePoints[0].y75.toFixed(1)} `;
-    for (let k = 1; k < rangePoints.length; k++) {
-      bandPath += `L ${rangePoints[k].x.toFixed(1)} ${rangePoints[k].y75.toFixed(1)} `;
-    }
-    for (let k = rangePoints.length - 1; k >= 0; k--) {
-      bandPath += `L ${rangePoints[k].x.toFixed(1)} ${rangePoints[k].y25.toFixed(1)} `;
-    }
-    bandPath += 'Z';
-  }
-
-  const todayX = getX(todayIndex);
-
-  const formatDay = (iso: string) => {
-    try {
-      const d = new Date(iso);
-      return d.toLocaleDateString(lang === 'kk' ? 'kk-KZ' : lang === 'ru' ? 'ru-RU' : 'en-US', { day: 'numeric', month: 'short' });
-    } catch {
-      return iso;
-    }
-  };
-  const d1 = series[0]?.date ? formatDay(series[0].date) : '';
-  const midIdx = Math.floor(todayIndex * 0.7);
-  const d2 = series[midIdx]?.date ? formatDay(series[midIdx].date) : '';
-  const d3 = series[N - 1]?.date ? formatDay(series[N - 1].date) : '';
-
-  return (
-    <svg viewBox={`0 0 ${svgW} ${svgH}`} className="hydrograph-svg" aria-label={tr(lang, 'River discharge hydrograph')}>
-      {/* Horizontal gridlines */}
-      <line
-        x1={padL}
-        y1={getY(topTick)}
-        x2={padL + plotW}
-        y2={getY(topTick)}
-        stroke="rgba(255,255,255,0.08)"
-        strokeWidth="1"
-      />
-      <line
-        x1={padL}
-        y1={getY(midTick)}
-        x2={padL + plotW}
-        y2={getY(midTick)}
-        stroke="rgba(255,255,255,0.08)"
-        strokeWidth="1"
-      />
-      <line
-        x1={padL}
-        y1={getY(0)}
-        x2={padL + plotW}
-        y2={getY(0)}
-        stroke="rgba(255,255,255,0.18)"
-        strokeWidth="1"
-      />
-
-      {/* Y-axis tick labels */}
-      <text x={padL - 6} y={getY(topTick) + 3} className="chart-tick" textAnchor="end">
-        {topTick}
-      </text>
-      <text x={padL - 6} y={getY(midTick) + 3} className="chart-tick" textAnchor="end">
-        {midTick}
-      </text>
-      <text x={padL - 6} y={getY(0) + 3} className="chart-tick" textAnchor="end">
-        0
-      </text>
-
-      {/* Forecast range band */}
-      {bandPath && <path d={bandPath} fill="rgba(56, 189, 248, 0.22)" />}
-
-      {/* Historical modelled flow line */}
-      {actualPath && (
-        <path
-          d={actualPath}
-          fill="none"
-          stroke="#38bdf8"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      )}
-
-      {/* Forecast median line */}
-      {forecastPath && (
-        <path
-          d={forecastPath}
-          fill="none"
-          stroke="#38bdf8"
-          strokeWidth="2.2"
-          strokeDasharray="4 3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      )}
-
-      {/* Today vertical divider line */}
-      <line
-        x1={todayX}
-        y1={padT}
-        x2={todayX}
-        y2={padT + plotH}
-        stroke="rgba(255,255,255,0.38)"
-        strokeWidth="1.2"
-      />
-      <text x={todayX + 4} y={padT + 8} className="chart-today-label">
-        {tr(lang, 'today')}
-      </text>
-
-      {/* X-axis date labels */}
-      <text x={padL} y={padT + plotH + 16} className="chart-date" textAnchor="start">
-        {d1}
-      </text>
-      <text x={getX(midIdx)} y={padT + plotH + 16} className="chart-date" textAnchor="middle">
-        {d2}
-      </text>
-      <text x={padL + plotW} y={padT + plotH + 16} className="chart-date" textAnchor="end">
-        {d3}
-      </text>
-    </svg>
-  );
+/** Last-week mean for flood-watch points (same rule as the Flood watch tab), so Watch/Warning lines can be drawn. */
+function gaugeBase(place: Place, data: PlaceFlowData): number | null {
+  if (place.type !== 'gauge') return null;
+  const week = data.series.slice(Math.max(0, data.todayIndex - 7), data.todayIndex).map((d) => d.actual).filter((v): v is number => v != null);
+  if (!week.length) return null;
+  const base = week.reduce((a, b) => a + b, 0) / week.length;
+  const peak = Math.max(base, ...data.series.slice(data.todayIndex, data.todayIndex + 7).map((d) => d.median ?? d.actual ?? 0));
+  return peak < MIN_ALERT_FLOW ? null : base;
 }

@@ -1068,17 +1068,20 @@ export const PLACES: Place[] = [
 
   // =========================================================================
   // ---- Flood-watch points (queried live from Open-Meteo Flood API) ----
+  // Coordinates are GloFAS 0.05° cell centres on the main channel near each city,
+  // chosen as the nearest cell carrying >=60% of the largest yearly-mean flow within
+  // ~20 km. A cell even 5 km off the channel can read near zero.
   // =========================================================================
-  mk('gauge', 'g-oskemen', ['Irtysh at Oskemen', 'Өскемендегі Ертіс', 'Иртыш у Усть-Каменогорска'], 49.97, 82.65, 'East Kazakhstan', 'Ertis', 'A', OM),
-  mk('gauge', 'g-pavlodar', ['Irtysh at Pavlodar', 'Павлодардағы Ертіс', 'Иртыш у Павлодара'], 52.28, 76.97, 'Pavlodar', 'Ertis', 'A', OM),
-  mk('gauge', 'g-petropavl', ['Ishim at Petropavl', 'Петропавлдағы Есіл', 'Ишим у Петропавловска'], 54.87, 69.15, 'North Kazakhstan', 'Esil', 'A', OM),
+  mk('gauge', 'g-oskemen', ['Irtysh at Oskemen', 'Өскемендегі Ертіс', 'Иртыш у Усть-Каменогорска'], 49.925, 82.625, 'East Kazakhstan', 'Ertis', 'A', OM),
+  mk('gauge', 'g-pavlodar', ['Irtysh at Pavlodar', 'Павлодардағы Ертіс', 'Иртыш у Павлодара'], 52.275, 76.875, 'Pavlodar', 'Ertis', 'A', OM),
+  mk('gauge', 'g-petropavl', ['Ishim at Petropavl', 'Петропавлдағы Есіл', 'Ишим у Петропавловска'], 54.875, 69.075, 'North Kazakhstan', 'Esil', 'A', OM),
   mk('gauge', 'g-astana', ['Ishim at Astana', 'Астанадағы Есіл', 'Ишим у Астаны'], 51.13, 71.43, 'Astana city', 'Esil', 'A', OM),
-  mk('gauge', 'g-kostanay', ['Tobol at Kostanay', 'Қостанайдағы Тобыл', 'Тобол у Костаная'], 53.18, 63.6, 'Kostanay', 'Tobyl-Torgay', 'A', OM),
+  mk('gauge', 'g-kostanay', ['Tobol at Kostanay', 'Қостанайдағы Тобыл', 'Тобол у Костаная'], 53.175, 63.575, 'Kostanay', 'Tobyl-Torgay', 'A', OM),
   mk('gauge', 'g-oral', ['Ural at Oral', 'Оралдағы Жайық', 'Урал у Уральска'], 51.2, 51.38, 'West Kazakhstan', 'Zhayik-Caspian', 'A', OM),
   mk('gauge', 'g-atyrau', ['Ural at Atyrau', 'Атыраудағы Жайық', 'Урал у Атырау'], 47.1, 51.88, 'Atyrau', 'Zhayik-Caspian', 'A', OM),
-  mk('gauge', 'g-kyzylorda', ['Syr Darya at Kyzylorda', 'Қызылордадағы Сырдария', 'Сырдарья у Кызылорды'], 44.84, 65.5, 'Kyzylorda', 'Aral-Syrdarya', 'A', OM),
+  mk('gauge', 'g-kyzylorda', ['Syr Darya at Kyzylorda', 'Қызылордадағы Сырдария', 'Сырдарья у Кызылорды'], 44.825, 65.425, 'Kyzylorda', 'Aral-Syrdarya', 'A', OM),
   mk('gauge', 'g-kapchagay', ['Ili at Kapchagay', 'Қапшағайдағы Іле', 'Иле у Капшагая'], 43.88, 77.07, 'Almaty', 'Balkhash-Alakol', 'A', OM),
-  mk('gauge', 'g-temirtau', ['Nura at Temirtau', 'Теміртаудағы Нұра', 'Нура у Темиртау'], 50.03, 72.95, 'Karaganda', 'Nura-Sarysu', 'A', OM),
+  mk('gauge', 'g-temirtau', ['Nura at Temirtau', 'Теміртаудағы Нұра', 'Нура у Темиртау'], 50.075, 72.925, 'Karaganda', 'Nura-Sarysu', 'A', OM),
   mk('gauge', 'g-taraz', ['Talas at Taraz', 'Тараздағы Талас', 'Талас у Тараза'], 42.88, 71.4, 'Jambyl', 'Shu-Talas', 'A', OM),
 
   // =========================================================================

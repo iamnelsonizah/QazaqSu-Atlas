@@ -61,11 +61,13 @@ function levelOf(ratio: number | null, base: number | null, peak: number | null)
   return 'normal';
 }
 
+const FLOOD_PAST_DAYS = 30;
+
 export async function fetchFlood(signal?: AbortSignal): Promise<FloodPoint[]> {
   const gauges = PLACES.filter((p) => p.type === 'gauge');
   const lat = gauges.map((g) => g.lat).join(',');
   const lon = gauges.map((g) => g.lon).join(',');
-  const url = `https://flood-api.open-meteo.com/v1/flood?latitude=${lat}&longitude=${lon}&daily=river_discharge&past_days=7&forecast_days=7`;
+  const url = `https://flood-api.open-meteo.com/v1/flood?latitude=${lat}&longitude=${lon}&daily=river_discharge,river_discharge_p25,river_discharge_p75&past_days=${FLOOD_PAST_DAYS}&forecast_days=7`;
   const res = await fetch(url, { signal, cache: 'no-store' });
   if (!res.ok) throw new Error(`Open-Meteo flood ${res.status}`);
   const json = asArray<any>(await res.json());
@@ -73,11 +75,14 @@ export async function fetchFlood(signal?: AbortSignal): Promise<FloodPoint[]> {
     const g = gauges[i];
     const t: string[] = r.daily?.time ?? [];
     const q: (number | null)[] = r.daily?.river_discharge ?? [];
-    const past = q.slice(0, 7).filter((v): v is number => v != null);
-    const future = q.slice(7).filter((v): v is number => v != null);
+    const p25: (number | null)[] = r.daily?.river_discharge_p25 ?? [];
+    const p75: (number | null)[] = r.daily?.river_discharge_p75 ?? [];
+    const today = Math.min(FLOOD_PAST_DAYS, Math.max(0, t.length - 1));
+    const past = q.slice(today - 7, today).filter((v): v is number => v != null);
+    const future = q.slice(today).filter((v): v is number => v != null);
     const base = past.length ? past.reduce((s, v) => s + v, 0) / past.length : null;
     const peak = future.length ? Math.max(...future) : null;
-    const now = q[7] ?? null;
+    const now = q[today] ?? null;
     const ratio = base && peak != null && base > 0 ? peak / base : null;
     return {
       id: g.id,
@@ -89,7 +94,14 @@ export async function fetchFlood(signal?: AbortSignal): Promise<FloodPoint[]> {
       base,
       ratio,
       level: levelOf(ratio, base, peak),
-      series: t.map((d, k) => ({ date: d, q: q[k] ?? null })),
+      series: t.slice(today - 7, today + 7).map((d, k) => ({ date: d, q: q[today - 7 + k] ?? null })),
+      history: t.map((d, k) => ({
+        date: d,
+        q: q[k] ?? null,
+        p25: k >= today ? p25[k] ?? null : null,
+        p75: k >= today ? p75[k] ?? null : null,
+      })),
+      todayIndex: today,
     };
   });
 }

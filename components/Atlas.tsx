@@ -316,7 +316,14 @@ export default function Atlas() {
           </div>
         </section>
 
-        {tab === 'flood' && <FloodWatch flood={flood} state={fState} lang={lang} />}
+        {tab === 'flood' && (
+          <FloodWatch
+            flood={flood}
+            state={fState}
+            lang={lang}
+            onShowPlace={(id) => { resetFilters(); setSelectedId(id); setTab('map'); }}
+          />
+        )}
         {tab === 'rain' && <RainHarvest weather={weather} state={wState} lang={lang} />}
         {tab === 'basins' && (
           <BasinsGroundwater
