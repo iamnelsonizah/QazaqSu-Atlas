@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { BASINS, type Basin, type FloodPoint, type Lang, type LoadState } from '@/lib/types';
 import { PLACES, nameOf } from '@/lib/places';
 import { formatNumber, tr } from '@/lib/i18n';
+import Icon from '../Icon';
 
 type BasinFilter = Basin | 'all';
 type SortMode = 'rise' | 'name';
@@ -185,7 +186,7 @@ export default function BasinsGroundwater({ flood, state, updatedAt, refreshing,
                 <section className="basin-live-group" key={basin}>
                   <header className="basin-live-group-head">
                     <div><h4>{tr(lang, basin)}</h4><span>{formatNumber(points.length, lang)} {tr(lang, points.length === 1 ? 'model location' : lang === 'ru' && points.length >= 2 && points.length <= 4 ? 'model locations 2–4' : 'model locations')}</span></div>
-                    <button type="button" className="basin-map-button" onClick={() => onShowBasin(basin)}>{tr(lang, 'Show on map')} <span aria-hidden="true">↗</span></button>
+                    <button type="button" className="basin-map-button" onClick={() => onShowBasin(basin)}>{tr(lang, 'Show on map')} <Icon name="arrowRight" size={13} /></button>
                   </header>
                   {points.length ? (
                     <div className="basin-live-table-wrap">

@@ -12,6 +12,7 @@ import {
   type PlaceWeatherDay,
 } from '@/lib/openmeteo';
 import FlowChart from './FlowChart';
+import Icon from './Icon';
 
 interface Props {
   place: Place;
@@ -183,7 +184,7 @@ export default function DetailDrawer({
             aria-label={tr(lang, 'Close details panel')}
             title={tr(lang, 'Close (Esc)')}
           >
-            ✕
+            <Icon name="close" size={18} />
           </button>
         </div>
 
@@ -197,7 +198,7 @@ export default function DetailDrawer({
             onClick={toggleWatch}
             title={tr(lang, isWatched ? 'Remove from watched list' : 'Add to watched list')}
           >
-            <span className="action-icon">{isWatched ? '★' : '☆'}</span>
+            <Icon name="star" filled={isWatched} className="action-icon" />
             <span>{tr(lang, isWatched ? 'Watching' : 'Watch')}</span>
           </button>
 
@@ -206,7 +207,7 @@ export default function DetailDrawer({
             onClick={copyPermalink}
             title={tr(lang, 'Copy direct link to this water body')}
           >
-            <span className="action-icon">🔗</span>
+            <Icon name="link" className="action-icon" />
             <span>{tr(lang, copied ? 'Copied!' : 'Copy link')}</span>
           </button>
 
@@ -215,7 +216,7 @@ export default function DetailDrawer({
             onClick={() => setShowCitation(!showCitation)}
             title={tr(lang, 'Show citation for research and reports')}
           >
-            <span className="action-icon">”</span>
+            <Icon name="quote" className="action-icon" />
             <span>{tr(lang, 'Cite')}</span>
           </button>
 
@@ -228,7 +229,7 @@ export default function DetailDrawer({
             rel="noopener noreferrer"
             title={tr(lang, 'Submit field feedback, measurement updates, or photo corrections')}
           >
-            <span className="action-icon">⚐</span>
+            <Icon name="flag" className="action-icon" />
             <span>{tr(lang, 'Report from the field')}</span>
           </a>
         </div>
@@ -441,7 +442,7 @@ export default function DetailDrawer({
           {place.drainageType && (
             <div className="network-regime-box">
               <div className="network-regime-badge">
-                <span>{place.drainageType === 'endorheic' ? `🔒 ${tr(lang, 'Endorheic Terminal Basin')}` : `🌊 ${tr(lang, 'Exorheic Arctic Ocean Drainage')}`}</span>
+                <span>{place.drainageType === 'endorheic' ? tr(lang, 'Endorheic Terminal Basin') : tr(lang, 'Exorheic Arctic Ocean Drainage')}</span>
               </div>
               <p className="network-regime-desc">
                 {tr(lang, place.drainageType === 'endorheic'
@@ -467,15 +468,13 @@ export default function DetailDrawer({
                         onClick={() => onSelectPlace?.(target.id)}
                         title={`${tr(lang, 'Zoom to')} ${target.name.en}`}
                       >
-                        <span>💧</span>
                         <span>{tr(lang, inf)}</span>
-                        <span className="pill-arrow">↗</span>
+                        <Icon name="arrowRight" size={12} className="pill-arrow" />
                       </button>
                     );
                   }
                   return (
                     <span key={idx} className="network-pill">
-                      <span>💧</span>
                       <span>{tr(lang, inf)}</span>
                     </span>
                   );
@@ -500,15 +499,13 @@ export default function DetailDrawer({
                         onClick={() => onSelectPlace?.(target.id)}
                         title={`${tr(lang, 'Zoom to')} ${target.name.en}`}
                       >
-                        <span>➡️</span>
                         <span>{tr(lang, out)}</span>
-                        <span className="pill-arrow">↗</span>
+                        <Icon name="arrowRight" size={12} className="pill-arrow" />
                       </button>
                     );
                   }
                   return (
                     <span key={idx} className="network-pill">
-                      <span>➡️</span>
                       <span>{tr(lang, out)}</span>
                     </span>
                   );
@@ -540,7 +537,7 @@ export default function DetailDrawer({
           {!place.drainageType && !place.inflows && !place.outflows && (
             <div className="flow-nodata-box">
               <div className="flow-nodata-header">
-                <span className="flow-nodata-icon">ℹ️</span>
+                <Icon name="info" size={15} className="flow-nodata-icon" />
                 <span className="flow-nodata-title">{tr(lang, 'Sub-Basin Hydrological Unit')}</span>
               </div>
               <p className="flow-nodata-desc">
@@ -572,9 +569,9 @@ export default function DetailDrawer({
                 <tbody>
                   <tr>
                     <td><strong>{tr(lang, 'Surface Elevation')}</strong></td>
-                    <td className="mono" style={{ color: '#dc2626' }}>~30.0 m BS</td>
-                    <td className="mono" style={{ color: '#16a34a', fontWeight: 700 }}>42.0 m BS (+12 m)</td>
-                    <td className="mono" style={{ color: '#0284c7' }}>45.0 m BS (+15 m)</td>
+                    <td className="mono" style={{ color: 'var(--warn)' }}>~30.0 m BS</td>
+                    <td className="mono" style={{ color: 'var(--ok)', fontWeight: 700 }}>42.0 m BS (+12 m)</td>
+                    <td className="mono" style={{ color: 'var(--accent)' }}>45.0 m BS (+15 m)</td>
                   </tr>
                   <tr>
                     <td><strong>{tr(lang, 'Water Surface Area')}</strong></td>
@@ -584,21 +581,21 @@ export default function DetailDrawer({
                   </tr>
                   <tr>
                     <td><strong>{tr(lang, 'Water Salinity')}</strong></td>
-                    <td className="mono" style={{ color: '#dc2626' }}>30–35 g/L ({tr(lang, 'Hyper-saline')})</td>
-                    <td className="mono" style={{ color: '#16a34a', fontWeight: 700 }}>8–10 g/L ({tr(lang, 'Brackish/Fresh')})</td>
-                    <td className="mono" style={{ color: '#0284c7' }}>5–8 g/L ({tr(lang, 'Fresh')})</td>
+                    <td className="mono" style={{ color: 'var(--warn)' }}>30–35 g/L ({tr(lang, 'Hyper-saline')})</td>
+                    <td className="mono" style={{ color: 'var(--ok)', fontWeight: 700 }}>8–10 g/L ({tr(lang, 'Brackish/Fresh')})</td>
+                    <td className="mono" style={{ color: 'var(--accent)' }}>5–8 g/L ({tr(lang, 'Fresh')})</td>
                   </tr>
                   <tr>
                     <td><strong>{tr(lang, 'Commercial Fish Catch')}</strong></td>
-                    <td className="mono" style={{ color: '#dc2626' }}>~52 {tr(lang, 'tonnes/yr')} ({tr(lang, 'Collapsed')})</td>
-                    <td className="mono" style={{ color: '#16a34a', fontWeight: 700 }}>7,500–8,000 t/yr</td>
-                    <td className="mono" style={{ color: '#0284c7' }}>12,000+ t/yr</td>
+                    <td className="mono" style={{ color: 'var(--warn)' }}>~52 {tr(lang, 'tonnes/yr')} ({tr(lang, 'Collapsed')})</td>
+                    <td className="mono" style={{ color: 'var(--ok)', fontWeight: 700 }}>7,500–8,000 t/yr</td>
+                    <td className="mono" style={{ color: 'var(--accent)' }}>12,000+ t/yr</td>
                   </tr>
                   <tr>
                     <td><strong>{tr(lang, 'Distance to Aralsk Port')}</strong></td>
-                    <td className="mono" style={{ color: '#dc2626' }}>~100 km {tr(lang, 'retreat')}</td>
+                    <td className="mono" style={{ color: 'var(--warn)' }}>~100 km {tr(lang, 'retreat')}</td>
                     <td className="mono">~15–20 km from harbor</td>
-                    <td className="mono" style={{ color: '#0284c7', fontWeight: 700 }}>0 km ({tr(lang, 'Port Restored')})</td>
+                    <td className="mono" style={{ color: 'var(--accent)', fontWeight: 700 }}>0 km ({tr(lang, 'Port Restored')})</td>
                   </tr>
                   <tr>
                     <td><strong>{tr(lang, 'Ichthyofauna Ecology')}</strong></td>
@@ -628,21 +625,21 @@ export default function DetailDrawer({
             <div className="stat-grid" style={{ marginTop: 8, gridTemplateColumns: '1fr 1fr' }}>
               <div className="stat-card" style={{ padding: '8px 10px' }}>
                 <span className="network-label">{tr(lang, 'Summer Melt Contribution')}</span>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#0891b2', margin: '2px 0' }}>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--accent)', margin: '2px 0' }}>
                   {place.meltwaterContribution || '30–40%'}
                 </div>
                 <p className="card-sub" style={{ fontSize: 11 }}>{tr(lang, 'Peak July–August urban water supply for Almaty.')}</p>
               </div>
-              <div className="stat-card" style={{ padding: '8px 10px', borderLeft: '3px solid #dc2626' }}>
+              <div className="stat-card" style={{ padding: '8px 10px', borderLeft: '3px solid var(--warn)' }}>
                 <span className="network-label">{tr(lang, 'Mass Balance Loss Rate')}</span>
-                <div style={{ fontSize: 18, fontWeight: 700, color: '#dc2626', margin: '2px 0' }}>-0.41 m w.e./yr</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--warn)', margin: '2px 0' }}>-0.41 m w.e./yr</div>
                 <p className="card-sub" style={{ fontSize: 11 }}>{tr(lang, 'Cumulative ice thickness loss since 1956 benchmark.')}</p>
               </div>
             </div>
 
             <div className="network-transboundary-callout" style={{ marginTop: 8 }}>
               <div className="network-transboundary-title">
-                <span>🏔️</span>
+                <Icon name="alert" size={14} />
                 <span>{tr(lang, 'GLOF Hazard Mitigation & Sentinel Post')}</span>
               </div>
               <p className="network-regime-desc">{tr(lang, 'High-mountain moraine dams are monitored by Kazselezashchita and the Mynzhylki hydromet station (3,017 m). During peak summer melt periods, siphon pumping stations and artificial drainage channels are deployed at proglacial moraine lakes (e.g., Lake No. 6) to prevent catastrophic glacial lake outburst floods down the Medeu valley.')}</p>
@@ -711,7 +708,7 @@ export default function DetailDrawer({
           ) : (
             <div className="flow-nodata-box">
               <div className="flow-nodata-header">
-                <span className="flow-nodata-icon">⚠️</span>
+                <Icon name="alert" size={15} className="flow-nodata-icon" />
                 <span className="flow-nodata-title">{tr(lang, 'Insufficient GloFAS Grid Coverage')}</span>
               </div>
               <p className="flow-nodata-desc">
@@ -747,7 +744,7 @@ export default function DetailDrawer({
           ) : (
             <div className="flow-nodata-box">
               <div className="flow-nodata-header">
-                <span className="flow-nodata-icon">ℹ️</span>
+                <Icon name="info" size={15} className="flow-nodata-icon" />
                 <span className="flow-nodata-title">{tr(lang, 'Weather Forecast Unavailable')}</span>
               </div>
               <p className="flow-nodata-desc">
@@ -766,7 +763,7 @@ export default function DetailDrawer({
             className="quick-link-btn"
           >
             <span>{tr(lang, 'Satellite view')}</span>
-            <span className="ext-arrow">↗</span>
+            <Icon name="external" size={12} className="ext-arrow" />
           </a>
           <a
             href={`https://www.openstreetmap.org/#map=12/${place.lat}/${place.lon}`}
@@ -775,7 +772,7 @@ export default function DetailDrawer({
             className="quick-link-btn"
           >
             <span>{tr(lang, 'OpenStreetMap')}</span>
-            <span className="ext-arrow">↗</span>
+            <Icon name="external" size={12} className="ext-arrow" />
           </a>
           <a
             href="https://global-surface-water.appspot.com/map"
@@ -784,7 +781,7 @@ export default function DetailDrawer({
             className="quick-link-btn"
           >
             <span>{tr(lang, 'Surface-water history')}</span>
-            <span className="ext-arrow">↗</span>
+            <Icon name="external" size={12} className="ext-arrow" />
           </a>
           {place.wikidataId && (
             <a
@@ -794,7 +791,7 @@ export default function DetailDrawer({
               className="quick-link-btn"
             >
               <span>{tr(lang, 'Wikidata')}</span>
-              <span className="ext-arrow">↗</span>
+              <Icon name="external" size={12} className="ext-arrow" />
             </a>
           )}
         </div>

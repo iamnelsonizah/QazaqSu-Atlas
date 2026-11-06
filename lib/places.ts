@@ -2,14 +2,14 @@ import type { Basin, FloodPoint, Lang, Place, PlaceType, Verification } from './
 import { formatNumber, tr } from './i18n';
 
 export const TYPE_META: Record<PlaceType, { label: string; plural: string; color: string }> = {
-  dam: { label: 'Dam or reservoir', plural: 'Dams and reservoirs', color: '#2f6fdb' },
-  lake: { label: 'Lake or sea', plural: 'Lakes and seas', color: '#1fa37a' },
-  river: { label: 'River', plural: 'Rivers', color: '#2f8f3a' },
-  canal: { label: 'Strategic canal', plural: 'Strategic canals', color: '#06b6d4' },
-  glacier: { label: 'Glacier water tower', plural: 'Glaciers & alpine stations', color: '#0284c7' },
-  ramsar: { label: 'Ramsar wetland', plural: 'Ramsar wetlands', color: '#d9578f' },
-  gauge: { label: 'Flood-watch point', plural: 'Flood-watch points', color: '#5b3fb5' },
-  basinhq: { label: 'Basin council HQ', plural: 'Basin councils (HQ)', color: '#3d4a52' },
+  dam: { label: 'Dam or reservoir', plural: 'Dams and reservoirs', color: '#1d4e89' },
+  lake: { label: 'Lake or sea', plural: 'Lakes and seas', color: '#2a8c8c' },
+  river: { label: 'River', plural: 'Rivers', color: '#4a8fd0' },
+  canal: { label: 'Strategic canal', plural: 'Strategic canals', color: '#6f97ab' },
+  glacier: { label: 'Glacier water tower', plural: 'Glaciers & alpine stations', color: '#8fb6d6' },
+  ramsar: { label: 'Ramsar wetland', plural: 'Ramsar wetlands', color: '#a8527a' },
+  gauge: { label: 'Flood-watch point', plural: 'Flood-watch points', color: '#c26b1a' },
+  basinhq: { label: 'Basin council HQ', plural: 'Basin councils (HQ)', color: '#3b4650' },
 };
 export const TYPE_ORDER: PlaceType[] = ['dam', 'lake', 'river', 'canal', 'glacier', 'ramsar', 'gauge', 'basinhq'];
 

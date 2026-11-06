@@ -4,6 +4,7 @@ import { ALERT_LABEL, type AlertLevel, type FloodPoint, type Lang, type LoadStat
 import { formatNumber, tr } from '@/lib/i18n';
 import { PLACES, nameOf } from '@/lib/places';
 import FlowChart, { FlowLegend } from '../FlowChart';
+import Icon from '../Icon';
 
 const LEVEL_RANK: Record<AlertLevel, number> = { warning: 0, watch: 1, normal: 2, lowflow: 3, nodata: 4 };
 const LOW_FLOW_NOTE = 'Flow is under 5 m³/s here, too low for a meaningful flood signal.';
@@ -77,7 +78,7 @@ export default function FloodWatch({ flood, state, lang, onShowPlace }: Props) {
                 />
                 {f.level === 'lowflow' && <p className="flood-card-note">{tr(lang, LOW_FLOW_NOTE)}</p>}
                 <button type="button" className="flood-card-map" onClick={() => onShowPlace(f.id)}>
-                  {tr(lang, 'Show on map')} →
+                  {tr(lang, 'Show on map')} <Icon name="arrowRight" size={13} />
                 </button>
               </li>
             ))}

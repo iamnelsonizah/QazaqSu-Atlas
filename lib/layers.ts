@@ -34,7 +34,7 @@ export interface LayerDef {
 }
 
 export const LAYERS: LayerDef[] = [
-  { id: 'rivers', label: 'River network', group: 'Hydrography', source: 'HydroSHEDS HydroRIVERS', legend: [{ color: '#2d86c4', label: 'Rivers and streams', kind: 'line' }] },
+  { id: 'rivers', label: 'River network', group: 'Hydrography', source: 'HydroSHEDS HydroRIVERS', legend: [{ color: '#1d5fa6', label: 'Rivers and streams', kind: 'line' }] },
   { id: 'lakes', label: 'Lakes', group: 'Hydrography', source: 'HydroSHEDS HydroLAKES', legend: [{ color: '#7fb9e0', label: 'Lakes, reservoirs and seas' }] },
   {
     id: 'canals',
@@ -59,7 +59,7 @@ export const LAYERS: LayerDef[] = [
   { id: 'regions', label: 'Regions', group: 'Context', source: 'geoBoundaries ADM1', legend: [{ color: '#6b7c85', label: 'Regions and cities of republican significance', kind: 'line' }] },
 
   { id: 'flood100', label: '100-year flood zone', group: 'Floods', source: 'Copernicus EMS GloFAS', legend: [{ color: '#1f3a93', label: 'Flood depth in a 100-year flood (GloFAS)' }] },
-  { id: 'glofasAlerts', label: 'GloFAS alerts', group: 'Floods', source: 'Open-Meteo Flood API', legend: [{ color: '#e0a100', label: 'River flow rising (watch)', kind: 'dot' }, { color: '#c62828', label: 'Strong rise forecast (warning)', kind: 'dot' }, { color: '#4a9d6a', label: 'Normal', kind: 'dot' }] },
+  { id: 'glofasAlerts', label: 'GloFAS alerts', group: 'Floods', source: 'Open-Meteo Flood API', legend: [{ color: '#c98a12', label: 'River flow rising (watch)', kind: 'dot' }, { color: '#b5401c', label: 'Strong rise forecast (warning)', kind: 'dot' }, { color: '#4f8a3b', label: 'Normal', kind: 'dot' }] },
   { id: 'pastFloods', label: 'Past floods', group: 'Floods', source: 'Dartmouth Flood Observatory (sample)', legend: [{ color: '#d86a4a', label: 'Past large floods; size reflects extent', kind: 'dot' }] },
   { id: 'surfaceWater', label: 'Water 1984–2021', group: 'Floods', source: 'JRC Global Surface Water', legend: [{ color: '#0b4fd6', label: 'Surface water seen in satellite record (JRC)' }] },
 

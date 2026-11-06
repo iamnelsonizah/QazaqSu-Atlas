@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { LAYERS, LAYER_GROUPS, type LayerId } from '@/lib/layers';
 import type { Lang } from '@/lib/types';
 import { BASEMAPS, type BasemapId } from '@/lib/basemaps';
 import { tr } from '@/lib/i18n';
+import Icon from './Icon';
 
 interface Props {
   layers: Set<LayerId>;
@@ -21,14 +22,8 @@ const LAYERS_ICON = (
 );
 
 export default function LayerBar({ layers, toggle, lang, basemap, setBasemap }: Props) {
-  const [collapsed, setCollapsed] = useState(false);
-  useEffect(() => {
-    const compact = window.matchMedia('(max-width: 900px)');
-    const syncToViewport = (event: MediaQueryList | MediaQueryListEvent) => setCollapsed(event.matches);
-    syncToViewport(compact);
-    compact.addEventListener('change', syncToViewport);
-    return () => compact.removeEventListener('change', syncToViewport);
-  }, []);
+  // Starts closed on every screen size so the map is the first thing people see.
+  const [collapsed, setCollapsed] = useState(true);
   const activeCount = Array.from(layers).length;
 
   if (collapsed) {
@@ -55,8 +50,9 @@ export default function LayerBar({ layers, toggle, lang, basemap, setBasemap }: 
           onClick={() => setCollapsed(true)}
           title={tr(lang, 'Minimize layer bar to see more map')}
         >
-          <span className="hide-text">{tr(lang, 'Hide layers')} ▴</span>
-          <span className="close-x" aria-hidden="true">×</span>
+          <span className="hide-text">{tr(lang, 'Hide layers')}</span>
+          <Icon name="chevronUp" size={14} className="hide-text" />
+          <Icon name="close" size={20} className="close-x" />
         </button>
       </div>
       <div className="layer-basemaps" role="group" aria-label={tr(lang, 'Basemap')}>

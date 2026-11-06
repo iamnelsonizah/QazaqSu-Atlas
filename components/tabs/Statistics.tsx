@@ -38,14 +38,14 @@ function Bars({ title, unit, type, lang }: { title: string; unit: string; type: 
 }
 
 const BASIN_DEPENDENCE_BARS = [
-  { name: 'Aral-Syrdarya', ratio: 78.9, val: '14.6 / 18.5 km³', color: '#dc2626' },
-  { name: 'Zhayik-Caspian (Ural)', ratio: 78.9, val: '7.5 / 9.5 km³', color: '#dc2626' },
-  { name: 'Shu-Talas', ratio: 73.8, val: '3.1 / 4.2 km³', color: '#dc2626' },
-  { name: 'Balkhash-Alakol', ratio: 44.2, val: '12.3 / 27.8 km³', color: '#d97706' },
-  { name: 'Tobyl-Torgay', ratio: 38.1, val: '0.8 / 2.1 km³', color: '#d97706' },
-  { name: 'Ertis (Irtysh)', ratio: 28.1, val: '9.5 / 33.8 km³', color: '#16a34a' },
-  { name: 'Esil (Ishim)', ratio: 0.0, val: '0.0 / 2.6 km³ (Domestic)', color: '#0284c7' },
-  { name: 'Nura-Sarysu', ratio: 0.0, val: '0.0 / 1.5 km³ (Domestic)', color: '#0284c7' },
+  { name: 'Aral-Syrdarya', ratio: 78.9, val: '14.6 / 18.5 km³', color: 'var(--warn)' },
+  { name: 'Zhayik-Caspian (Ural)', ratio: 78.9, val: '7.5 / 9.5 km³', color: 'var(--warn)' },
+  { name: 'Shu-Talas', ratio: 73.8, val: '3.1 / 4.2 km³', color: 'var(--warn)' },
+  { name: 'Balkhash-Alakol', ratio: 44.2, val: '12.3 / 27.8 km³', color: 'var(--watch)' },
+  { name: 'Tobyl-Torgay', ratio: 38.1, val: '0.8 / 2.1 km³', color: 'var(--watch)' },
+  { name: 'Ertis (Irtysh)', ratio: 28.1, val: '9.5 / 33.8 km³', color: 'var(--ok)' },
+  { name: 'Esil (Ishim)', ratio: 0.0, val: '0.0 / 2.6 km³ (Domestic)', color: 'var(--accent)' },
+  { name: 'Nura-Sarysu', ratio: 0.0, val: '0.0 / 1.5 km³ (Domestic)', color: 'var(--accent)' },
 ];
 
 export default function Statistics({ lang }: { lang: Lang }) {

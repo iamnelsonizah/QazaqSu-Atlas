@@ -19,6 +19,7 @@ import RainHarvest from './tabs/RainHarvest';
 import BasinsGroundwater from './tabs/BasinsGroundwater';
 import Statistics from './tabs/Statistics';
 import DataSources from './tabs/DataSources';
+import Icon from './Icon';
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false, loading: () => <div className="map-canvas map-loading">Loading map…</div> });
 
@@ -233,14 +234,19 @@ export default function Atlas() {
     <div className="app">
       <header className="top" ref={headerRef}>
         <div className="brand">
-          <svg width="30" height="38" viewBox="0 0 30 38" aria-hidden="true">
-            <path d="M15 1C15 1 3 15 3 24a12 12 0 0 0 24 0C27 15 15 1 15 1Z" fill="var(--accent)" />
-            <path d="M9 25c2-3 4 1 6-1s4 1 6-1" stroke="#fff" strokeWidth="1.6" fill="none" strokeLinecap="round" />
+          <svg className="brand-mark" width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+            {/* Ram's-horn (qoshqar müiz) ornament over water */}
+            <rect width="32" height="32" rx="5" fill="var(--accent)" />
+            <path
+              d="M16 22V14.5C16 10 12.8 7.5 9.6 7.5 6.9 7.5 5 9.3 5 11.7c0 2.3 1.8 3.9 3.8 3.9 1.8 0 3-1.2 3-2.8M16 14.5C16 10 19.2 7.5 22.4 7.5c2.7 0 4.6 1.8 4.6 4.2 0 2.3-1.8 3.9-3.8 3.9-1.8 0-3-1.2-3-2.8"
+              fill="none" stroke="var(--accent-ink)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"
+            />
+            <path d="M5 25.5c1.8 1.3 3.7 1.3 5.5 0s3.7-1.3 5.5 0 3.7 1.3 5.5 0 3.7-1.3 5.5 0" fill="none" stroke="var(--accent-ink)" strokeWidth="1.6" strokeLinecap="round" opacity="0.75" />
           </svg>
           <div>
             <h1>
-              <span className="brand-full">{tr(lang, 'QazaqSu Atlas: Kazakhstan Water Atlas')}</span>
-              <span className="brand-short" aria-hidden="true">QazaqSu<small>{tr(lang, 'Kazakhstan Water Atlas')}</small></span>
+              <span className="wm">Qazaq<b>Su</b></span>
+              <span className="wm-sub">{tr(lang, 'Kazakhstan Water Atlas')}</span>
             </h1>
             <p>{tr(lang, 'Rivers, dams, lakes, wetlands, groundwater and flood watch · 17 regions and 3 cities')}</p>
           </div>
@@ -257,7 +263,7 @@ export default function Atlas() {
             aria-label={tr(lang, 'Toggle dark mode')}
             title={tr(lang, themeMode === 'system' ? 'Theme follows system' : 'Use system theme')}
           >
-            {dark ? '☀' : '☾'}
+            <Icon name={dark ? 'sun' : 'moon'} />
           </button>
         </div>
         <nav className="tabs" aria-label={tr(lang, 'Sections')}>
@@ -309,7 +315,7 @@ export default function Atlas() {
             {notice && (
               <div className="notice" role="status">
                 {tr(lang, notice)}
-                <button onClick={() => setNotice(null)} aria-label={tr(lang, 'Dismiss')}>×</button>
+                <button onClick={() => setNotice(null)} aria-label={tr(lang, 'Dismiss')}><Icon name="close" /></button>
               </div>
             )}
             <div className="provider">Basemap: {BASEMAP_PROVIDER}</div>

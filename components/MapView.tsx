@@ -272,7 +272,7 @@ export default function MapView(props: Props) {
 
     // --- regions: outline-mode fill, water-stress choropleth ---
     geo('regions', p.geo.regions);
-    addLayer({ id: 'regions-base', type: 'fill', source: 'regions', paint: { 'fill-color': '#ffffff', 'fill-opacity': 1 } });
+    addLayer({ id: 'regions-base', type: 'fill', source: 'regions', paint: { 'fill-color': '#fbf9f4', 'fill-opacity': 1 } });
     addLayer({
       id: 'stress-fill', type: 'fill', source: 'regions',
       paint: { 'fill-opacity': 0.6, 'fill-color': ['interpolate', ['linear'], ['get', 'stress'], 1, '#f7e7a6', 2, '#f2b366', 3, '#dd6b3b', 4, '#a31f2d'] },
@@ -302,7 +302,7 @@ export default function MapView(props: Props) {
         'source-layer': 'hydrorivers',
         minzoom: 3,
         paint: {
-          'line-color': isImagery ? '#38bdf8' : '#1c6aa8',
+          'line-color': isImagery ? '#38bdf8' : '#1d5fa6',
           'line-width': [
             'interpolate', ['linear'], ['zoom'],
             3, ['interpolate', ['linear'], ['to-number', ['get', 'ORD_STRA']], 1, 0.35, 8, 0.95],
@@ -428,7 +428,7 @@ export default function MapView(props: Props) {
         type: 'fill',
         source: 'mask',
         paint: {
-          'fill-color': isImagery ? '#080e18' : outline ? '#cbd5e1' : '#0f172a',
+          'fill-color': isImagery ? '#080e18' : outline ? '#cbd5e1' : '#14202b',
           'fill-opacity': isImagery ? 0.76 : outline ? 1 : 0.70,
         },
       });
@@ -534,7 +534,7 @@ export default function MapView(props: Props) {
       type: 'line',
       source: 'rivers',
       paint: {
-        'line-color': isImagery ? '#38bdf8' : '#1c6aa8',
+        'line-color': isImagery ? '#38bdf8' : '#1d5fa6',
         'line-width': [
           'interpolate', ['linear'], ['zoom'],
           3, ['interpolate', ['linear'], ['coalesce', ['to-number', ['get', 'stra']], 4], 1, 0.35, 8, 0.95],
@@ -546,23 +546,11 @@ export default function MapView(props: Props) {
     });
 
     // Regional internal borders
-    const casingWidth = isImagery || isDark
-      ? ['interpolate', ['linear'], ['zoom'], 3, 14, 5, 18, 7, 24, 10, 32]
-      : outline
-      ? ['interpolate', ['linear'], ['zoom'], 3, 6.5, 6, 8.5, 9, 11]
-      : ['interpolate', ['linear'], ['zoom'], 3, 11, 5, 14, 7, 18, 10, 24];
-
-    const lineWidth = isImagery || isDark
-      ? ['interpolate', ['linear'], ['zoom'], 3, 8.5, 5, 12, 7, 16, 10, 22]
-      : outline
-      ? ['interpolate', ['linear'], ['zoom'], 3, 3.8, 6, 5.2, 9, 7.5]
-      : ['interpolate', ['linear'], ['zoom'], 3, 7, 5, 9, 7, 12, 10, 16];
-
-    const casingColor = isImagery || isDark
-      ? 'rgba(0, 0, 0, 0.95)'
-      : outline
-      ? 'rgba(15, 42, 51, 0.35)'
-      : 'rgba(15, 42, 51, 0.85)';
+    // National border drawn like a printed survey map: a firm ink line on a paper halo.
+    const casingWidth = ['interpolate', ['linear'], ['zoom'], 3, 5, 6, 7, 10, 10];
+    const lineWidth = ['interpolate', ['linear'], ['zoom'], 3, 1.8, 6, 2.4, 10, 3.2];
+    const casingColor = isImagery || isDark ? 'rgba(10, 18, 26, 0.85)' : 'rgba(251, 249, 244, 0.95)';
+    const borderColor = isImagery || isDark ? '#e8e4da' : '#14202b';
 
     addLayer({
       id: 'regions-line',
@@ -605,9 +593,9 @@ export default function MapView(props: Props) {
       source: 'border',
       paint: {
         'line-color': '#000000',
-        'line-width': ['interpolate', ['linear'], ['zoom'], 3, 20, 5, 26, 7, 34, 10, 44],
-        'line-blur': 4,
-        'line-opacity': 0.7,
+        'line-width': ['interpolate', ['linear'], ['zoom'], 3, 8, 10, 16],
+        'line-blur': 6,
+        'line-opacity': 0.12,
       },
       layout: { 'line-cap': 'round', 'line-join': 'round' },
     });
@@ -627,7 +615,7 @@ export default function MapView(props: Props) {
       type: 'line',
       source: 'border',
       paint: {
-        'line-color': '#22c55e',
+        'line-color': borderColor,
         'line-width': lineWidth as any,
         'line-opacity': 1,
       },
@@ -649,7 +637,7 @@ export default function MapView(props: Props) {
           'text-allow-overlap': false,
         },
         paint: {
-          'text-color': isImagery ? '#ffffff' : '#1e293b',
+          'text-color': isImagery ? '#ffffff' : '#14202b',
           'text-halo-color': isImagery ? 'rgba(0, 0, 0, 0.95)' : '#ffffff',
           'text-halo-width': isImagery ? 2.5 : 2.0,
         },
@@ -660,8 +648,8 @@ export default function MapView(props: Props) {
     geo('floods', PAST_FLOODS);
     addLayer({ id: 'floods-circle', type: 'circle', source: 'floods', paint: { 'circle-color': '#d86a4a', 'circle-opacity': 0.55, 'circle-radius': ['get', 'r'], 'circle-stroke-color': '#a8432a', 'circle-stroke-width': 1.5 } });
     geo('alerts', alertFC(p.flood, p.lang));
-    addLayer({ id: 'alerts-halo', type: 'circle', source: 'alerts', paint: { 'circle-radius': 14, 'circle-opacity': 0.25, 'circle-color': ['match', ['get', 'level'], 'warning', '#c62828', 'watch', '#e0a100', 'nodata', '#9aa5ab', 'lowflow', '#9aa5ab', '#4a9d6a'] } });
-    addLayer({ id: 'alerts-circle', type: 'circle', source: 'alerts', paint: { 'circle-radius': 7, 'circle-color': ['match', ['get', 'level'], 'warning', '#c62828', 'watch', '#e0a100', 'nodata', '#9aa5ab', 'lowflow', '#9aa5ab', '#4a9d6a'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+    addLayer({ id: 'alerts-halo', type: 'circle', source: 'alerts', paint: { 'circle-radius': 14, 'circle-opacity': 0.25, 'circle-color': ['match', ['get', 'level'], 'warning', '#b5401c', 'watch', '#c98a12', 'nodata', '#9aa5ab', 'lowflow', '#9aa5ab', '#4f8a3b'] } });
+    addLayer({ id: 'alerts-circle', type: 'circle', source: 'alerts', paint: { 'circle-radius': 7, 'circle-color': ['match', ['get', 'level'], 'warning', '#b5401c', 'watch', '#c98a12', 'nodata', '#9aa5ab', 'lowflow', '#9aa5ab', '#4f8a3b'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
     geo('rain', weatherFC(p.weather));
     addLayer({ id: 'rain-y', type: 'circle', source: 'rain', paint: { 'circle-color': '#3a7bd5', 'circle-opacity': 0.55, 'circle-stroke-color': '#1d4f9c', 'circle-stroke-width': 1, 'circle-radius': ['interpolate', ['linear'], ['get', 'y'], 0, 3, 5, 10, 25, 22] } });
     addLayer({ id: 'rain-3d', type: 'circle', source: 'rain', paint: { 'circle-color': '#7a4fd1', 'circle-opacity': 0.5, 'circle-stroke-color': '#4d2a9c', 'circle-stroke-width': 1, 'circle-radius': ['interpolate', ['linear'], ['get', 'f3'], 0, 3, 10, 11, 40, 24] } });
@@ -677,7 +665,7 @@ export default function MapView(props: Props) {
         'circle-stroke-width': 1.5,
       },
     });
-    addLayer({ id: 'places-selected', type: 'circle', source: 'places', filter: ['==', ['get', 'id'], ''], paint: { 'circle-radius': 17, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#f2b705', 'circle-stroke-width': 3 } });
+    addLayer({ id: 'places-selected', type: 'circle', source: 'places', filter: ['==', ['get', 'id'], ''], paint: { 'circle-radius': 17, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#c98a12', 'circle-stroke-width': 3 } });
 
     // Click hit target for regions
     addLayer({ id: 'regions-hit', type: 'fill', source: 'regions', paint: { 'fill-opacity': 0 } });
@@ -698,7 +686,7 @@ export default function MapView(props: Props) {
 
     // Background color
     if (map.getLayer('bg')) {
-      map.setPaintProperty('bg', 'background-color', isDark ? '#081318' : '#dfe9ec');
+      map.setPaintProperty('bg', 'background-color', isDark ? '#0a121a' : '#e4ded1');
     }
 
     // Toggle basemap raster layers (Map mode switches to Esri World Dark Gray Canvas in dark mode - NO API key needed)
@@ -713,12 +701,12 @@ export default function MapView(props: Props) {
     // Outline mode fill: territory for Kazakhstan
     if (map.getLayer('regions-base')) {
       map.setLayoutProperty('regions-base', 'visibility', outline ? 'visible' : 'none');
-      map.setPaintProperty('regions-base', 'fill-color', isDark ? '#12262e' : '#ffffff');
+      map.setPaintProperty('regions-base', 'fill-color', isDark ? '#141e2a' : '#fbf9f4');
     }
 
     // Exterior mask dynamic styling across basemaps and dark mode
     if (map.getLayer('mask-fill')) {
-      const maskColor = isDark ? '#04070a' : isImagery ? '#080e18' : outline ? '#cbd5e1' : '#0f172a';
+      const maskColor = isDark ? '#05090e' : isImagery ? '#080e18' : outline ? '#cbd5e1' : '#14202b';
       const maskOpacity = isDark ? 0.82 : isImagery ? 0.76 : outline ? 1 : 0.70;
       map.setPaintProperty('mask-fill', 'fill-color', maskColor);
       map.setPaintProperty('mask-fill', 'fill-opacity', maskOpacity);
@@ -726,12 +714,12 @@ export default function MapView(props: Props) {
 
     // Rivers line color & opacity (glows luminous cyan in dark mode for maximum contrast)
     if (map.getLayer('rivers-line')) {
-      const riverColor = isDark || isImagery ? '#38bdf8' : '#1c6aa8';
+      const riverColor = isDark || isImagery ? '#38bdf8' : '#1d5fa6';
       map.setPaintProperty('rivers-line', 'line-color', riverColor);
       map.setPaintProperty('rivers-line', 'line-opacity', isDark || isImagery ? 0.95 : 0.85);
     }
     if (map.getLayer('hydrorivers-line')) {
-      map.setPaintProperty('hydrorivers-line', 'line-color', isDark || isImagery ? '#38bdf8' : '#1c6aa8');
+      map.setPaintProperty('hydrorivers-line', 'line-color', isDark || isImagery ? '#38bdf8' : '#1d5fa6');
       map.setPaintProperty('hydrorivers-line', 'line-opacity', isDark || isImagery ? 0.95 : 0.85);
     }
 
@@ -769,7 +757,7 @@ export default function MapView(props: Props) {
     }
     if (map.getLayer('border-line')) {
       map.setLayoutProperty('border-line', 'visibility', 'visible');
-      map.setPaintProperty('border-line', 'line-color', '#22c55e');
+      map.setPaintProperty('border-line', 'line-color', borderColor);
       map.setPaintProperty('border-line', 'line-width', lineWidth);
     }
 
@@ -790,8 +778,8 @@ export default function MapView(props: Props) {
     }
     if (map.getLayer('region-labels')) {
       map.setLayoutProperty('region-labels', 'visibility', showRegions ? 'visible' : 'none');
-      map.setPaintProperty('region-labels', 'text-color', isDark || isImagery ? '#ffffff' : '#1e293b');
-      map.setPaintProperty('region-labels', 'text-halo-color', isDark ? 'rgba(8, 19, 24, 0.95)' : isImagery ? 'rgba(0, 0, 0, 0.95)' : '#ffffff');
+      map.setPaintProperty('region-labels', 'text-color', isDark || isImagery ? '#ffffff' : '#14202b');
+      map.setPaintProperty('region-labels', 'text-halo-color', isDark ? 'rgba(14, 22, 32, 0.95)' : isImagery ? 'rgba(0, 0, 0, 0.95)' : '#fbf9f4');
       map.setPaintProperty('region-labels', 'text-halo-width', isDark || isImagery ? 2.5 : 2.0);
     }
 
