@@ -5,6 +5,7 @@ import { BASINS, type Basin, type FloodPoint, type Lang, type LoadState } from '
 import { PLACES, nameOf } from '@/lib/places';
 import { formatNumber, tr } from '@/lib/i18n';
 import Icon from '../Icon';
+import { clockTime } from '@/lib/dates';
 
 type BasinFilter = Basin | 'all';
 type SortMode = 'rise' | 'name';
@@ -167,7 +168,7 @@ export default function BasinsGroundwater({ flood, state, updatedAt, refreshing,
             {refreshing ? tr(lang, 'Refreshing…') : tr(lang, 'Refresh data')}
           </button>
           <span className="basin-updated" aria-live="polite">
-            {updatedAt ? tr(lang, 'Retrieved {time}').replace('{time}', updatedAt.toLocaleTimeString(lang === 'kk' ? 'kk-KZ' : lang === 'ru' ? 'ru-RU' : 'en-US', { hour: '2-digit', minute: '2-digit' })) : tr(lang, 'Waiting for live data')}
+            {updatedAt ? tr(lang, 'Retrieved {time}').replace('{time}', clockTime(updatedAt)) : tr(lang, 'Waiting for live data')}
           </span>
         </div>
 

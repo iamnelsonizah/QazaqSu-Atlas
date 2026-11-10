@@ -42,7 +42,7 @@ export default function RainHarvest({ weather, state, lang }: { weather: Weather
         <label>{tr(lang, 'Rain per year (mm)')}<input type="number" min={0} value={annual} onChange={(e) => setAnnual(+e.target.value)} /></label>
         <label>{tr(lang, 'Share you can collect (%)')}<input type="number" min={0} max={100} value={eff} onChange={(e) => setEff(+e.target.value)} /></label>
         <div className="calc-out">
-          <b>{Math.round(litres).toLocaleString(lang === 'kk' ? 'kk-KZ' : lang === 'ru' ? 'ru-RU' : 'en-US')} {tr(lang, 'litres a year')}</b>
+          <b>{formatNumber(Math.round(litres), lang)} {tr(lang, 'litres a year')}</b>
           <span>{tr(lang, 'about')} {formatNumber(litres / 365, lang, { maximumFractionDigits: 0 })} {tr(lang, 'litres a day')}</span>
         </div>
       </div>

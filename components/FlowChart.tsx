@@ -2,6 +2,7 @@
 
 import type { FlowDay, Lang } from '@/lib/types';
 import { formatNumber, tr } from '@/lib/i18n';
+import { dayMonth } from '@/lib/dates';
 
 export const WATCH_RATIO = 1.4;
 export const WARNING_RATIO = 2;
@@ -83,7 +84,7 @@ export default function FlowChart({ days, todayIndex, lang, base, label, forecas
   const fmt = (v: number) => formatNumber(v, lang, { maximumFractionDigits: v < 10 ? 1 : 0 });
   const day = (iso: string) => {
     const d = new Date(`${iso}T00:00:00`);
-    return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString(lang === 'kk' ? 'kk-KZ' : lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'short' });
+    return Number.isNaN(d.getTime()) ? iso : dayMonth(iso, lang);
   };
   const summary = `${label}. ${tr(lang, 'Flow now')}: ${days[today].q != null ? fmt(days[today].q!) : '–'} ${tr(lang, 'm³/s')}${peak != null ? `, ${tr(lang, '7-day peak')}: ${fmt(peak)} ${tr(lang, 'm³/s')}` : ''}.`;
 

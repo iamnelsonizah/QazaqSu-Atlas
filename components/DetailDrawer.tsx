@@ -13,6 +13,7 @@ import {
 } from '@/lib/openmeteo';
 import FlowChart from './FlowChart';
 import Icon from './Icon';
+import { weekday } from '@/lib/dates';
 
 interface Props {
   place: Place;
@@ -735,7 +736,7 @@ export default function DetailDrawer({
             <div className="weather-week-grid">
               {weatherDays.map((w, idx) => (
                 <div key={idx} className="weather-day-tile">
-                <div className="w-day-name">{new Date(`${w.date}T12:00:00`).toLocaleDateString(lang === 'kk' ? 'kk-KZ' : lang === 'ru' ? 'ru-RU' : 'en-US', { weekday: 'short' })}</div>
+                <div className="w-day-name">{weekday(w.date, lang, 'short')}</div>
                   <div className="w-tmax">{w.tMax}°</div>
                   <div className="w-tmin">{w.tMin}°</div>
                   <div className="w-rain">{w.precipMm} mm</div>
