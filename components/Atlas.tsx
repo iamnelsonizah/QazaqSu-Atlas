@@ -21,6 +21,8 @@ import BasinsGroundwater from './tabs/BasinsGroundwater';
 import Statistics from './tabs/Statistics';
 import DataSources from './tabs/DataSources';
 import Icon from './Icon';
+import NearMe, { type UserLocation } from './NearMe';
+import type { LatLon } from '@/lib/geo';
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false, loading: () => <div className="map-canvas map-loading">Loading map…</div> });
 
@@ -77,6 +79,9 @@ export default function Atlas() {
   const [notice, setNotice] = useState<string | null>(null);
   const [moreOpen, setMoreOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [userLoc, setUserLoc] = useState<(UserLocation & { nearest: LatLon | null; at: number }) | null>(null);
+  const onLocated = useCallback((here: UserLocation, nearest: LatLon | null) => setUserLoc({ ...here, nearest, at: Date.now() }), []);
+  const onClearLocation = useCallback(() => setUserLoc(null), []);
 
   // ---- shareable links: state <-> URL ----
   const [urlReady, setUrlReady] = useState(false);
@@ -335,6 +340,8 @@ export default function Atlas() {
     setFilters({ q: '', region: '', basin: '', verification: '', sort: 'largest' });
     setTypes(new Set(ALL_TYPES));
   };
+  // Open a place on the map, clearing filters that could hide it.
+  const showPlace = (id: string) => { resetFilters(); setSelectedId(id); setTab('map'); };
   const selected = PLACES.find((p) => p.id === selectedId);
   const activeFilters = [filters.region, filters.basin, filters.verification].filter(Boolean).length
     + (types.size !== ALL_TYPES.length || ALL_TYPES.some((t) => !types.has(t)) ? 1 : 0);
@@ -423,7 +430,9 @@ export default function Atlas() {
               onNotice={setNotice}
               initialView={initialView}
               onViewChange={onViewChange}
+              userLocation={userLoc}
             />
+            <NearMe lang={lang} flood={flood} onLocated={onLocated} onClear={onClearLocation} onShowPlace={showPlace} />
             <div className="basemaps" role="group" aria-label={tr(lang, 'Basemap')}>
               {BASEMAPS.map((b) => (
                 <button key={b.id} className={basemap === b.id ? 'on' : ''} onClick={() => setBasemap(b.id)}>{tr(lang, b.label)}</button>
@@ -446,7 +455,7 @@ export default function Atlas() {
             flood={flood}
             state={fState}
             lang={lang}
-            onShowPlace={(id) => { resetFilters(); setSelectedId(id); setTab('map'); }}
+            onShowPlace={showPlace}
           />
         )}
         {tab === 'rain' && <RainHarvest weather={weather} state={wState} lang={lang} />}

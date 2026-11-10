@@ -42,6 +42,8 @@ interface Props {
   initialView?: MapViewState | null;
   /** Called after the person moves the map (not for the automatic first framing). */
   onViewChange?: (view: MapViewState) => void;
+  /** "Near me": the person's position plus the point to frame with it. `at` changes on each locate. */
+  userLocation?: { lat: number; lon: number; accuracy: number; nearest: { lat: number; lon: number } | null; at: number } | null;
 }
 
 /** which map layers belong to each toggle */
@@ -1055,6 +1057,43 @@ export default function MapView(props: Props) {
         : { top: 80, bottom: 40, left: 40, right: 460 },
     });
   }, [props.selectedId]);
+
+  // ---- "Near me": you-are-here marker, framed together with the nearest flood-watch point ----
+  const userMarker = useRef<maplibregl.Marker | null>(null);
+  useEffect(() => {
+    const map = mapRef.current;
+    const u = props.userLocation;
+    if (!map) return;
+    if (!u) {
+      userMarker.current?.remove();
+      userMarker.current = null;
+      return;
+    }
+    if (!userMarker.current) {
+      const el = document.createElement('div');
+      el.className = 'you-are-here';
+      el.setAttribute('role', 'img');
+      el.setAttribute('aria-label', tr(P.current.lang, 'You are here'));
+      el.title = tr(P.current.lang, 'You are here');
+      userMarker.current = new maplibregl.Marker({ element: el }).setLngLat([u.lon, u.lat]).addTo(map);
+    } else {
+      userMarker.current.setLngLat([u.lon, u.lat]);
+    }
+    const isMobile = window.innerWidth <= 900;
+    // Leave room for the Near me card: bottom of the map on phones, right side on desktop.
+    // Proportional, so it never exceeds a short map (fitBounds gives up if padding is too large).
+    const h = map.getContainer().clientHeight;
+    const w = map.getContainer().clientWidth;
+    const padding = isMobile
+      ? { top: Math.round(h * 0.14), bottom: Math.round(h * 0.58), left: Math.round(w * 0.12), right: Math.round(w * 0.12) }
+      : { top: 80, bottom: 110, left: 60, right: Math.min(380, Math.round(w * 0.45)) };
+    if (u.nearest) {
+      const b = new maplibregl.LngLatBounds([u.lon, u.lat], [u.lon, u.lat]).extend([u.nearest.lon, u.nearest.lat]);
+      map.fitBounds(b, { padding, maxZoom: 9, duration: 1200 });
+    } else {
+      map.flyTo({ center: [u.lon, u.lat], zoom: 9, padding });
+    }
+  }, [props.userLocation?.at, props.userLocation == null]);
 
   const clearRiverTrace = () => {
     const map = mapRef.current;

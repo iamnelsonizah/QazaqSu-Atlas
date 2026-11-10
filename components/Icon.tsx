@@ -16,6 +16,7 @@ const PATHS = {
   chevronDown: 'm6 9 6 6 6-6',
   chevronUp: 'm6 15 6-6 6 6',
   check: 'm5 12.5 4.5 4.5L19 7.5',
+  locate: 'M12 2.5V5m0 14v2.5M2.5 12H5m14 0h2.5M12 19a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm0-4a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z',
   share: 'M12 15V3.5m0 0L8 7.5m4-4 4 4M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7',
 } as const;
 
