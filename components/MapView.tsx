@@ -9,6 +9,7 @@ import { PAST_FLOODS } from '@/lib/floods';
 import { placeProps, placesToGeoJSON, TYPE_META, REGION_BOUNDS, BASIN_BOUNDS, REGION_SHAPE_NAMES, PLACES, nameOf } from '@/lib/places';
 import { stressLabel } from '@/lib/stress';
 import { formatNumber, tr } from '@/lib/i18n';
+import type { MapViewState } from '@/lib/urlState';
 import { ALERT_LABEL, EMPTY_FC, type AlertLevel, type FC, type FloodPoint, type Lang, type Place, type WeatherPoint } from '@/lib/types';
 
 export interface GeoBundle {
@@ -37,6 +38,10 @@ interface Props {
   weather: WeatherPoint[] | null;
   flood: FloodPoint[] | null;
   onNotice: (msg: string) => void;
+  /** View from a shared link; wins over the default framing when the map first loads. */
+  initialView?: MapViewState | null;
+  /** Called after the person moves the map (not for the automatic first framing). */
+  onViewChange?: (view: MapViewState) => void;
 }
 
 /** which map layers belong to each toggle */
@@ -846,11 +851,19 @@ export default function MapView(props: Props) {
       applied.current = {};
       sync.current();
 
-      if (!P.current.region && window.innerWidth <= 900) {
+      // First framing, in priority order: a view from a shared link, then a shared
+      // place, then a region filter, then the whole country on small screens.
+      const iv = P.current.initialView;
+      const firstPlace = P.current.selectedId ? P.current.places.find((x) => x.id === P.current.selectedId) : undefined;
+      if (iv) {
+        map.jumpTo({ center: [iv.lon, iv.lat], zoom: iv.zoom });
+      } else if (firstPlace) {
+        map.jumpTo({ center: [firstPlace.lon, firstPlace.lat], zoom: TYPE_ZOOM[firstPlace.type] ?? 7 });
+      } else if (!P.current.region && window.innerWidth <= 900) {
         map.fitBounds([[46.5, 40.5], [87.3, 55.5]], { padding: { top: 56, bottom: 16, left: 12, right: 12 }, duration: 0 });
       }
       // If initial region is present on map load, zoom to it
-      if (P.current.region && REGION_BOUNDS[P.current.region]) {
+      if (!iv && !firstPlace && P.current.region && REGION_BOUNDS[P.current.region]) {
         const b = REGION_BOUNDS[P.current.region];
         const isCity = P.current.region.includes('city') || P.current.region === 'Astana' || P.current.region === 'Almaty';
         map.fitBounds([[b[0], b[1]], [b[2], b[3]]], {
@@ -869,6 +882,19 @@ export default function MapView(props: Props) {
         if (map.isStyleLoaded()) onMapReady();
       });
     }
+
+    // Report the view only once the person has moved the map themselves, so a plain
+    // visit keeps a clean URL. After that, every move (including fly-to) is reported.
+    let userMoved = false;
+    const markUser = (e: any) => { if (e?.originalEvent) userMoved = true; };
+    map.on('movestart', markUser);
+    map.on('zoomstart', markUser);
+    map.on('moveend', (e: any) => {
+      markUser(e);
+      if (!userMoved) return;
+      const c = map.getCenter();
+      P.current.onViewChange?.({ lat: c.lat, lon: c.lng, zoom: map.getZoom() });
+    });
 
     map.on('error', (e: any) => {
       const status = e?.error?.status;
@@ -1015,6 +1041,8 @@ export default function MapView(props: Props) {
     if (!map) return;
     popup.current?.remove();
     if (!props.selectedId) return;
+    // Before the first load, onMapReady frames the place (or a shared view) itself.
+    if (!ready.current) return;
     const place = props.places.find((x) => x.id === props.selectedId);
     if (!place) return;
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 900;

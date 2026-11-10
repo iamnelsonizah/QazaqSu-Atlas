@@ -9,6 +9,7 @@ import { fetchFlood, fetchWeather } from '@/lib/openmeteo';
 import { PLACES, nameOf, sortPlaces, type SortId } from '@/lib/places';
 import { EMPTY_FC, type Basin, type FloodPoint, type Lang, type LoadState, type PlaceType, type WeatherPoint } from '@/lib/types';
 import { tr } from '@/lib/i18n';
+import { buildSearch, readUrlState, type MapViewState, type UrlState } from '@/lib/urlState';
 import type { GeoBundle } from './MapView';
 import Sidebar, { type Filters } from './Sidebar';
 import LayerBar from './LayerBar';
@@ -32,6 +33,7 @@ const TABS = [
   { id: 'data', label: 'Data and sources', short: 'Sources' },
 ] as const;
 type TabId = (typeof TABS)[number]['id'];
+const TAB_IDS = TABS.map((t) => t.id);
 const PRIMARY_TABS: TabId[] = ['map', 'flood', 'rain', 'basins'];
 const MORE_TABS: TabId[] = ['stats', 'data'];
 
@@ -74,6 +76,14 @@ export default function Atlas() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  // ---- shareable links: state <-> URL ----
+  const [urlReady, setUrlReady] = useState(false);
+  const [initialView, setInitialView] = useState<MapViewState | null>(null);
+  const viewRef = useRef<MapViewState | null>(null);
+  const lastWritten = useRef<{ tab: string; place: string | null }>({ tab: 'map', place: null });
+  const fromPop = useRef(false);
 
   const [geo, setGeo] = useState<GeoBundle>({
     regions: EMPTY_FC,
@@ -150,14 +160,113 @@ export default function Atlas() {
   };
 
   useEffect(() => {
-    const saved = window.localStorage.getItem('kz-water-atlas-lang');
+    let saved: string | null = null;
+    try { saved = window.localStorage.getItem('kz-water-atlas-lang'); } catch {}
     if (saved === 'en' || saved === 'kk' || saved === 'ru') setLang(saved);
   }, []);
   useEffect(() => {
     document.documentElement.lang = lang;
     document.title = tr(lang, 'QazaqSu Atlas: Kazakhstan Water Atlas');
-    window.localStorage.setItem('kz-water-atlas-lang', lang);
   }, [lang]);
+
+  // Saved only on an explicit choice, so a page load (or a link with ?lang=) never
+  // overwrites the visitor's own preference.
+  const chooseLang = (l: Lang) => {
+    setLang(l);
+    try { window.localStorage.setItem('kz-water-atlas-lang', l); } catch {}
+  };
+
+  const applyUrl = useCallback((u: UrlState, initial: boolean) => {
+    setTab((u.tab as TabId) ?? 'map');
+    setSelectedId(u.place ?? null);
+    setLayers(new Set(u.layers ?? DEFAULT_LAYERS));
+    setBasemap(u.base ?? 'map');
+    setFilters((f) => ({ ...f, region: u.region ?? '', basin: u.basin ?? '', q: u.q ?? '' }));
+    if (u.place) {
+      // A shared place must be visible even if its type is off by default (canals, glaciers).
+      const type = PLACES.find((p) => p.id === u.place)?.type;
+      if (type) setTypes((t) => (t.has(type) ? t : new Set([...Array.from(t), type])));
+    }
+    if (initial) {
+      setInitialView(u.view ?? null);
+      viewRef.current = u.view ?? null;
+      lastWritten.current = { tab: u.tab ?? 'map', place: u.place ?? null };
+      if (u.lang) setLang(u.lang);
+    }
+  }, []);
+
+  useEffect(() => {
+    applyUrl(readUrlState(window.location.search, TAB_IDS), true);
+    setUrlReady(true);
+    const onPop = () => {
+      fromPop.current = true;
+      applyUrl(readUrlState(window.location.search, TAB_IDS), false);
+      setTimeout(() => { fromPop.current = false; }, 400);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [applyUrl]);
+
+  const latest = useRef({ tab, selectedId, layers, basemap, filters });
+  latest.current = { tab, selectedId, layers, basemap, filters };
+
+  // Opening a place or changing section adds a history step (so Back closes the
+  // details panel); everything else, including panning, just updates the URL.
+  const writeUrl = useCallback(() => {
+    const st = latest.current;
+    const search = buildSearch({
+      tab: st.tab, place: st.selectedId, view: viewRef.current, layers: st.layers, base: st.basemap,
+      region: st.filters.region, basin: st.filters.basin, q: st.filters.q,
+    });
+    const prev = lastWritten.current;
+    lastWritten.current = { tab: st.tab, place: st.selectedId };
+    if (search === window.location.search) return;
+    const url = `${window.location.pathname}${search}${window.location.hash}`;
+    const step = !fromPop.current && (prev.tab !== st.tab || prev.place !== st.selectedId);
+    if (step) window.history.pushState(null, '', url);
+    else window.history.replaceState(null, '', url);
+  }, []);
+
+  useEffect(() => {
+    if (urlReady) writeUrl();
+  }, [urlReady, writeUrl, tab, selectedId, layers, basemap, filters.region, filters.basin, filters.q]);
+
+  const onViewChange = useCallback((v: MapViewState) => {
+    viewRef.current = v;
+    if (urlReady) writeUrl();
+  }, [urlReady, writeUrl]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 2600);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  const shareView = useCallback(async () => {
+    const url = window.location.href;
+    const touch = window.matchMedia('(pointer: coarse)').matches;
+    if (touch && typeof navigator.share === 'function') {
+      try { await navigator.share({ title: document.title, url }); return; }
+      catch (e) { if ((e as Error)?.name === 'AbortError') return; }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setToast('Link copied');
+      return;
+    } catch {}
+    // Fallback for browsers or embedded views that block the Clipboard API.
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch {}
+    ta.remove();
+    setToast(ok ? 'Link copied' : 'Could not copy the link. Copy it from the address bar.');
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -254,9 +363,17 @@ export default function Atlas() {
         <div className="top-tools">
           <div className="seg" role="group" aria-label={tr(lang, 'Language')}>
             {LANGS.map((l) => (
-              <button key={l.id} className={lang === l.id ? 'on' : ''} aria-pressed={lang === l.id} onClick={() => setLang(l.id)}>{l.label}</button>
+              <button key={l.id} className={lang === l.id ? 'on' : ''} aria-pressed={lang === l.id} onClick={() => chooseLang(l.id)}>{l.label}</button>
             ))}
           </div>
+          <button
+            className="icon-btn"
+            onClick={() => { void shareView(); }}
+            aria-label={tr(lang, 'Share this view')}
+            title={tr(lang, 'Share this view')}
+          >
+            <Icon name="share" />
+          </button>
           <button
             className="icon-btn"
             onClick={toggleTheme}
@@ -304,6 +421,8 @@ export default function Atlas() {
               weather={weather}
               flood={flood}
               onNotice={setNotice}
+              initialView={initialView}
+              onViewChange={onViewChange}
             />
             <div className="basemaps" role="group" aria-label={tr(lang, 'Basemap')}>
               {BASEMAPS.map((b) => (
@@ -350,6 +469,8 @@ export default function Atlas() {
         {tab === 'stats' && <Statistics lang={lang} />}
         {tab === 'data' && <DataSources lang={lang} />}
       </main>
+
+      {toast && <div className="toast" role="status">{tr(lang, toast)}</div>}
 
       <nav className="bottom-nav" aria-label={tr(lang, 'Sections')}>
         {PRIMARY_TABS.map((id) => {

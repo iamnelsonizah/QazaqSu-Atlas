@@ -108,7 +108,8 @@ export default function DetailDrawer({
 
   const copyPermalink = async () => {
     try {
-      const url = `${window.location.origin}${window.location.pathname}?place=${encodeURIComponent(place.id)}`;
+      // The address bar already holds this place plus the map view and layers (lib/urlState).
+      const url = window.location.href;
       await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2400);
