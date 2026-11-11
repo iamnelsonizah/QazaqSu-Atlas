@@ -3,7 +3,7 @@
 A layered water atlas for Kazakhstan built with **Next.js 14 (App Router)**, **MapLibre GL JS** and **PMTiles**.
 Sidebar list with search and filters, five basemaps, 16 toggleable data layers, live rain and river-flow data, a trilingual (English, Kazakh, Russian) place list, and six tabs.
 
-**Live:** https://qazaqsu.nelsonizah.com
+**Live:** https://qazaqsu.nelsonizah.com · **Roadmap:** [ROADMAP.md](ROADMAP.md)
 
 ## Run it
 
