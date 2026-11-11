@@ -56,7 +56,7 @@ export default function Statistics({ lang }: { lang: Lang }) {
   return (
     <section className="page">
       <h2>{tr(lang, 'National Water Statistics')}</h2>
-      <p className="lede">{tr(lang, 'Verified hydrological figures compiled from the Ministry of Water Resources and Irrigation of the Republic of Kazakhstan, Global Dam Watch, and the World Glacier Monitoring Service.')}</p>
+      <p className="lede">{tr(lang, 'Figures compiled from the Ministry of Water Resources and Irrigation of the Republic of Kazakhstan, Global Dam Watch and the World Glacier Monitoring Service. Check each record\'s source before citing it.')}</p>
 
       <div className="stat-grid">
         {/* Transboundary Inflow Dependence Bar */}

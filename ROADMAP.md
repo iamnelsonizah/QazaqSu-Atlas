@@ -12,10 +12,8 @@ This roadmap lists what should come next, in priority order. It is written for t
 
 The atlas is only useful to researchers if every number can be traced and the app is honest about what is sample data. Right now there are gaps:
 
-- **Status labels don't match the data.** The Data sources tab marks the Dartmouth Flood Observatory, IGRAC and WHYMAP layers as "Live". But past floods are 6 illustrative records (`lib/floods.ts`), and the two groundwater layers stay disabled until a layer name is set. These labels should say exactly what is wired in.
 - **Verification levels are all "A".** All 85 places are marked A (well documented), even though the README says some figures are approximate. Each record needs an honest A, B or C grade.
 - **Citations need to point at the real document.** 25 of the 47 reference links go to a site's homepage, not to the report they name. Each reference should link to the actual bulletin, dataset or page, or be removed.
-- **The Statistics tab says "Verified hydrological figures".** Either back each figure (such as the 46.7% transboundary inflow share) with a specific source, or soften the wording.
 - **Water stress uses placeholder scores** (`lib/stress.ts`). Replace them with zonal statistics from WRI Aqueduct 4.0 for each region.
 - **Past floods should use the real archive.** Load the Dartmouth Flood Observatory records for Kazakhstan, and add the 2024 spring floods by district.
 
@@ -23,7 +21,6 @@ The atlas is only useful to researchers if every number can be traced and the ap
 
 - **Detailed rivers and lakes don't load in production.** The HydroRIVERS and HydroLAKES PMTiles files are too large for the repo, so the live site returns 404 for them, and upstream/downstream river tracing doesn't work there. Host them on object storage that supports range requests (for example Cloudflare R2) and set `NEXT_PUBLIC_HYDRORIVERS_PMTILES` and `NEXT_PUBLIC_HYDROLAKES_PMTILES`.
 - **Turn on HydroBASINS.** The archive is already built (`public/data/hydrobasins.pmtiles`) but isn't wired up in production.
-- **Set the IGRAC and WHYMAP layer names** so the groundwater layers draw.
 
 ## 3. Researchers: download, cite, reproduce
 
@@ -47,6 +44,12 @@ The atlas is only useful to researchers if every number can be traced and the ap
 - **Clearer flood screening.** Explain on each flood-watch point what "watch" and "warning" mean, that it is a model screening and not an official warning, and link to the official Kazhydromet and Ministry of Emergency Situations channels.
 - **More flood-watch points** on the rivers that flooded in 2024 (Ural, Ilek, Tobol, Ishim, Nura), placed on the river channel.
 - **Works on weak connections.** Cache the app shell and base data so it opens on slow mobile networks, and test it at phone width.
+
+## Done
+
+- **Source labels now match the data.** Past floods are marked as sample data, and the HydroSHEDS rows say the detailed tiles aren't on the public site yet.
+- **The IGRAC and WHYMAP groundwater layers are on by default**, using the layer names from the local setup, so they also draw on the public site.
+- **The Statistics tab no longer says "Verified".** It asks readers to check each record's source before citing it.
 
 ## 6. Quality and maintenance
 

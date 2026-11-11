@@ -12,9 +12,9 @@ export const ENV = {
   glofasWms: process.env.NEXT_PUBLIC_GLOFAS_WMS || 'https://ows.globalfloods.eu/glofas-ows/ows.py',
   glofasLayer: process.env.NEXT_PUBLIC_GLOFAS_LAYER || 'FloodHazard100y',
   igracWms: process.env.NEXT_PUBLIC_IGRAC_WMS || 'https://ggis.un-igrac.org/geoserver/ows',
-  igracLayer: process.env.NEXT_PUBLIC_IGRAC_LAYER || '',
+  igracLayer: process.env.NEXT_PUBLIC_IGRAC_LAYER || 'geonode:a__2021_TBA_GGIS_utf8',
   whymapWms: process.env.NEXT_PUBLIC_WHYMAP_WMS || 'https://services.bgr.de/wms/grundwasser/whymap_gwr/',
-  whymapLayer: process.env.NEXT_PUBLIC_WHYMAP_LAYER || '',
+  whymapLayer: process.env.NEXT_PUBLIC_WHYMAP_LAYER || '0',
 };
 
 export function wmsTiles(base: string, layer: string): string {
