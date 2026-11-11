@@ -3,6 +3,8 @@
 A layered water atlas for Kazakhstan built with **Next.js 14 (App Router)**, **MapLibre GL JS** and **PMTiles**.
 Sidebar list with search and filters, five basemaps, 16 toggleable data layers, live rain and river-flow data, a trilingual (English, Kazakh, Russian) place list, and six tabs.
 
+**Live:** https://qazaqsu.nelsonizah.com
+
 ## Run it
 
 ```bash
@@ -102,3 +104,7 @@ scripts/fetch-data.mjs  caches boundaries, rivers and lakes locally
 - Open-Meteo is free for non-commercial use. Check its terms before commercial deployment.
 - The flood alert is a screening heuristic (forecast peak vs last week's mean), not an official warning.
 - Add more languages by extending the `name` record and the `Lang` type.
+
+## License
+
+The code is released under the [MIT License](LICENSE). Map data and the bundled tile archives come from third parties (HydroSHEDS, OpenStreetMap, geoBoundaries, Copernicus, JRC and others) and remain under their own licenses and attribution terms.

@@ -12,3 +12,4 @@ rsis_kz.html
 # Host these on Cloudflare R2 or GitHub Releases and configure NEXT_PUBLIC_*_PMTILES
 public/data/hydrorivers.pmtiles
 public/data/hydrolakes.pmtiles
+.DS_Store
